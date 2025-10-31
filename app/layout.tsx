@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Cinzel, Roboto, Teko } from "next/font/google";
 import "./globals.css";
 import TheHeader from "@/components/layout/TheHeader";
@@ -38,6 +39,7 @@ export default function RootLayout({
         <TheHeader />
         {children}
         <TheFooter />
+        <Analytics />
       </body>
     </html>
   );
