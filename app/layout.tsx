@@ -4,6 +4,7 @@ import { Cinzel, Roboto, Teko } from "next/font/google";
 import "./globals.css";
 import TheHeader from "@/components/layout/TheHeader";
 import TheFooter from "@/components/layout/TheFooter";
+import { SanityLive } from "@/sanity/lib/live";
 
 const cinzel = Cinzel({
   variable: "--font-cinzel",
@@ -38,6 +39,7 @@ export default function RootLayout({
       >
         <TheHeader />
         {children}
+        <SanityLive />
         <TheFooter />
         <Analytics />
       </body>
