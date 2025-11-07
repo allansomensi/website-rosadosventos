@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Cinzel, Roboto, Teko } from "next/font/google";
 import "./globals.css";
-import TheHeader from "@/components/layout/TheHeader";
-import TheFooter from "@/components/layout/TheFooter";
 import { SanityLive } from "@/sanity/lib/live";
 
 const cinzel = Cinzel({
@@ -37,10 +35,9 @@ export default function RootLayout({
       <body
         className={`${cinzel.variable} ${teko.variable} ${roboto.variable} antialiased`}
       >
-        <TheHeader />
         {children}
+
         <SanityLive />
-        <TheFooter />
         <Analytics />
       </body>
     </html>
