@@ -31,3 +31,18 @@ export const ABOUT_QUERY = groq`
     "imageAlt": image.alt
   }
 `;
+
+export const HIGHLIGHTS_QUERY = groq`
+  *[_type == "highlight"][0] {
+    title,
+    cards[] {
+      _key,
+      title,
+      description,
+      linkText,
+      linkHref,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt
+    }
+  }
+`;
