@@ -22,3 +22,12 @@ export const SHOWS_QUERY = groq`
   cidade,
   link
 }`;
+
+export const ABOUT_QUERY = groq`
+  *[_type == "sobre"][0] {
+    title,
+    bio,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt
+  }
+`;
