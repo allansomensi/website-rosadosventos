@@ -46,3 +46,22 @@ export const HIGHLIGHTS_QUERY = groq`
     }
   }
 `;
+
+export const CONTACT_QUERY = groq`
+  *[_type == "contato"][0] {
+    title,
+    subtitle,
+    emailTitle,
+    emailAddress,
+    whatsappTitle,
+    whatsappContacts[] {
+      text,
+      url
+    },
+    socialTitle,
+    socialLinks[] {
+      platform,
+      url
+    }
+  }
+`;
