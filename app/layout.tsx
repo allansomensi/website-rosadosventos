@@ -21,8 +21,39 @@ const roboto = Roboto({
   subsets: ["latin"],
 });
 
+const siteUrl = "https://bandarosadosventos.com.br";
+
 export const metadata: Metadata = {
-  title: "Rosa dos Ventos",
+  title: {
+    template: "%s | Rosa dos Ventos",
+    default: "Rosa dos Ventos - Banda de Rock",
+  },
+
+  description:
+    "Site oficial da banda Rosa dos Ventos. Confira nossa agenda de shows, fotos, vídeos e biografia. Contrate a banda para seu evento.",
+
+  keywords: [
+    "Rosa dos Ventos",
+    "banda",
+    "música ao vivo",
+    "rock",
+    "pop rock",
+    "agenda de shows",
+  ],
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
+
+  metadataBase: new URL(siteUrl),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
@@ -36,7 +67,6 @@ export default function RootLayout({
         className={`${cinzel.variable} ${teko.variable} ${roboto.variable} antialiased`}
       >
         {children}
-
         <SanityLive />
         <Analytics />
       </body>
