@@ -15,7 +15,7 @@ export const HERO_QUERY = groq`
 `;
 
 export const SHOWS_QUERY = groq`
-*[_type == "show"]|order(date asc){
+*[_type == "show"]|order(data asc){
   _id,
   data,
   local,
