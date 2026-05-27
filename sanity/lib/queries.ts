@@ -1,7 +1,7 @@
 import { groq } from "next-sanity";
 
 export const HERO_QUERY = groq`
-  *[_type == "hero" && _id == "743b1180-71ea-40f8-9ad1-6444c29b1f2e"][0] {
+  *[_type == "hero"][0] {
     "imageUrl": heroImage.asset->url,
     "imageAlt": heroImage.alt,
     subheading,
@@ -15,13 +15,15 @@ export const HERO_QUERY = groq`
 `;
 
 export const SHOWS_QUERY = groq`
-*[_type == "show"]|order(data asc){
-  _id,
-  data,
-  local,
-  cidade,
-  link
-}`;
+  *[_type == "show"] | order(data asc) {
+    _id,
+    data,
+    local,
+    cidade,
+    link,
+    linkLocalizacao
+  }
+`;
 
 export const ABOUT_QUERY = groq`
   *[_type == "sobre"][0] {
@@ -62,6 +64,27 @@ export const CONTACT_QUERY = groq`
     socialLinks[] {
       platform,
       url
+    }
+  }
+`;
+
+export const SETTINGS_QUERY = groq`
+  *[_type == "siteSettings"][0] {
+    "logoUrl": logo.asset->url
+  }
+`;
+
+export const AREA_CONTRATANTE_QUERY = groq`
+  *[_type == "areaContratante"][0] {
+    heading,
+    subheading,
+    description,
+    portfolioUrl,
+    driveUrl,
+    videos[] {
+      title,
+      youtubeUrl,
+      "thumbnailUrl": thumbnail.asset->url
     }
   }
 `;

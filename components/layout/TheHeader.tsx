@@ -2,111 +2,125 @@
 
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
-import { useState } from "react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default function TheHeader() {
+const NAV_LINKS = [
+  { href: "#agenda", label: "Agenda" },
+  { href: "#sobre", label: "Sobre" },
+  { href: "#contato", label: "Contato" },
+  { href: "/contratante", label: "Área do Contratante" },
+];
+
+export default function TheHeader({ logoUrl }: { logoUrl: string }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const navLinkClasses = [
-    "relative",
-    "text-gray-300",
-    "transition-colors duration-300",
-    "hover:text-white",
-    "after:absolute after:bottom-[-5px] after:left-0",
-    "after:h-[2px] after:w-0 after:bg-amber-400",
-    "after:transition-all after:duration-300",
-    "hover:after:w-full",
-    "after:content-['']",
-  ].join(" ");
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const handleLinkClick = () => {
-    setIsOpen(false);
-  };
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  const close = () => setIsOpen(false);
 
   return (
-    <header
-      className={`sticky top-0 left-0 z-50 w-full border-b-2 border-b-amber-800 bg-linear-to-br from-zinc-950 to-zinc-900 shadow-lg`}
-    >
-      <nav className="container mx-auto flex items-center justify-between px-4 py-4 sm:px-6">
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          <div className="h-15 w-15 shrink-0">
-            <Image
-              src={"/logo.png"}
-              width={256}
-              height={256}
-              alt="Logo Rosa dos Ventos"
-              className="h-12 w-12 object-contain sm:h-14 sm:w-14"
-            />
-          </div>
-          <span className="font-cinzel bg-linear-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text text-2xl font-bold tracking-wider text-transparent uppercase select-none [text-shadow:0_2px_4px_rgba(0,0,0,0.5)] sm:text-3xl">
-            Rosa dos Ventos
-          </span>
-        </div>
-
-        <ul className="font-teko hidden items-center space-x-10 text-3xl tracking-wide lg:flex">
-          <li>
-            <a href="#agenda" className={navLinkClasses}>
-              Agenda
-            </a>
-          </li>
-          <li>
-            <a href="#sobre" className={navLinkClasses}>
-              Sobre
-            </a>
-          </li>
-          <li>
-            <a href="#contato" className={navLinkClasses}>
-              Contato
-            </a>
-          </li>
-        </ul>
-
-        <button
-          className="text-gray-300 hover:text-white lg:hidden"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label="Abrir menu"
-        >
-          {isOpen ? <IconX /> : <IconMenu2 />}
-        </button>
-      </nav>
-
-      <div
-        className={`transition-all duration-300 ease-in-out lg:hidden ${
-          isOpen
-            ? "max-h-screen opacity-100"
-            : "max-h-0 overflow-hidden opacity-0"
+    <>
+      <header
+        className={`fixed top-0 left-0 z-50 w-full transition-all duration-500 ${
+          scrolled
+            ? "border-b border-(--border-gold) bg-[#0a0a0acc] backdrop-blur-md"
+            : "bg-transparent"
         }`}
       >
-        <ul className="font-teko flex flex-col items-center space-y-6 py-6 text-3xl tracking-wide">
-          <li>
-            <a
-              href="#agenda"
-              className={navLinkClasses}
-              onClick={handleLinkClick}
-            >
-              Agenda
-            </a>
-          </li>
-          <li>
-            <a
-              href="#sobre"
-              className={navLinkClasses}
-              onClick={handleLinkClick}
-            >
-              Sobre
-            </a>
-          </li>
-          <li>
-            <a
-              href="#contato"
-              className={navLinkClasses}
-              onClick={handleLinkClick}
-            >
-              Contato
-            </a>
-          </li>
-        </ul>
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:py-5">
+          <Link
+            href="/"
+            className="flex items-center gap-3 transition-opacity hover:opacity-80"
+            onClick={close}
+          >
+            <Image
+              src={logoUrl}
+              width={80}
+              height={80}
+              alt="Rosa dos Ventos"
+              className="h-10 w-10 object-contain sm:h-12 sm:w-12 md:h-16 md:w-16"
+            />
+            <span className="font-cinzel hidden bg-linear-to-b from-(--gold-light) to-(--gold-dark) bg-clip-text text-xl font-bold tracking-widest text-transparent uppercase sm:block md:text-2xl">
+              Rosa dos Ventos
+            </span>
+          </Link>
+
+          <ul className="font-teko hidden items-center gap-8 text-[1.35rem] tracking-wider lg:flex">
+            {NAV_LINKS.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`relative text-(--text-secondary) transition-colors duration-300 hover:text-white ${
+                    link.href === "/contratante"
+                      ? "rounded border border-(--border-gold) px-4 py-1.5 text-(--gold) hover:border-(--gold) hover:bg-(--gold) hover:text-black"
+                      : "after:absolute after:-bottom-1 after:left-0 after:h-px after:w-0 after:bg-(--gold) after:transition-all after:duration-300 hover:after:w-full"
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <button
+            className="flex h-10 w-10 items-center justify-center text-(--text-secondary) transition-colors hover:text-white lg:hidden"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label={isOpen ? "Fechar menu" : "Abrir menu"}
+          >
+            {isOpen ? <IconX size={24} /> : <IconMenu2 size={24} />}
+          </button>
+        </nav>
+      </header>
+
+      <div
+        className={`fixed inset-0 z-40 transition-all duration-300 lg:hidden ${
+          isOpen ? "visible opacity-100" : "invisible opacity-0"
+        }`}
+      >
+        <div
+          className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+          onClick={close}
+        />
+        <nav
+          className={`absolute top-0 right-0 h-full w-72 border-l border-(--border-gold) bg-(--surface) transition-transform duration-300 ${
+            isOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <div className="flex h-20 items-center px-6">
+            <span className="font-cinzel text-sm tracking-widest text-(--gold) uppercase opacity-80">
+              Menu
+            </span>
+          </div>
+          <ul className="font-teko flex flex-col px-6 text-2xl tracking-wider">
+            {NAV_LINKS.map((link, i) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  onClick={close}
+                  className={`block border-b border-(--border) py-5 text-(--text-secondary) transition-colors hover:text-(--gold) ${
+                    i === NAV_LINKS.length - 1 ? "border-0 text-(--gold)" : ""
+                  }`}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
-    </header>
+    </>
   );
 }

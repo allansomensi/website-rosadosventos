@@ -1,48 +1,96 @@
+"use server";
+
 import Image from "next/image";
 import Link from "next/link";
 import { sanityFetch } from "@/sanity/lib/live";
 import { HERO_QUERY } from "@/sanity/lib/queries";
 
-export default async function TheHero() {
-  const { data: hero } = await sanityFetch({ query: HERO_QUERY });
+interface HeroData {
+  imageUrl: string;
+  imageAlt: string;
+  subheading?: string;
+  headingLine1?: string;
+  headingLine2?: string;
+  cta?: {
+    label?: string;
+    link?: string;
+  };
+}
 
-  if (!hero) {
-    return null;
-  }
+export default async function TheHero() {
+  const { data } = await sanityFetch({ query: HERO_QUERY });
+  const hero = data as HeroData | null;
+
+  if (!hero) return null;
 
   return (
-    <section className="relative h-[50vh] w-full sm:h-[55vh] md:h-[65vh] lg:h-[calc(100vh-90px)]">
+    <section
+      className="relative flex min-h-svh items-center justify-center overflow-hidden"
+      aria-label="Banner principal"
+    >
+      {/* Background image */}
       <Image
         src={hero.imageUrl}
         alt={hero.imageAlt}
         fill
-        className="object-cover object-center lg:object-contain"
+        className="object-cover object-center"
         priority
+        sizes="100vw"
+        quality={85}
       />
 
-      <div className="absolute inset-0 z-10 bg-black/40" />
+      {/* Gradient overlays */}
+      <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-black/50 to-black/30" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/40 to-transparent" />
 
-      <div className="relative z-20 container mx-auto flex h-full flex-col items-center justify-center px-4 text-center sm:px-6">
+      {/* Decorative line */}
+      <div className="absolute right-0 bottom-0 left-0 h-px bg-linear-to-r from-transparent via-(--gold) to-transparent opacity-60" />
+
+      {/* Content */}
+      <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
         {hero.subheading && (
-          <h2 className="font-teko text-xl tracking-wider text-amber-400 uppercase sm:text-2xl md:text-3xl">
+          <p className="font-teko mb-4 inline-flex items-center gap-3 text-lg tracking-[0.3em] text-(--gold) uppercase sm:text-2xl">
+            <span className="h-px w-8 bg-(--gold) sm:w-12" aria-hidden="true" />
             {hero.subheading}
-          </h2>
+            <span className="h-px w-8 bg-(--gold) sm:w-12" aria-hidden="true" />
+          </p>
         )}
 
         {(hero.headingLine1 || hero.headingLine2) && (
-          <h1 className="font-cinzel my-2 text-3xl leading-snug font-bold tracking-wider text-white uppercase [text-shadow:0_4px_8px_rgba(0,0,0,0.8)] sm:my-3 sm:text-4xl md:my-4 md:text-5xl lg:text-6xl lg:leading-tight">
-            {hero.headingLine1} <br /> {hero.headingLine2}
+          <h1 className="font-cinzel my-4 text-4xl leading-tight font-bold tracking-wider text-white uppercase [text-shadow:0_4px_30px_rgba(0,0,0,0.9)] sm:text-5xl md:text-6xl lg:text-7xl">
+            {hero.headingLine1}
+            {hero.headingLine2 && (
+              <>
+                <br />
+                <span className="bg-linear-to-r from-(--gold-light) to-(--gold) bg-clip-text text-transparent">
+                  {hero.headingLine2}
+                </span>
+              </>
+            )}
           </h1>
         )}
 
         {hero.cta?.link && hero.cta?.label && (
           <Link
             href={hero.cta.link}
-            className="font-teko mt-3 border-2 border-amber-400 px-6 py-1 text-xl tracking-wider text-amber-400 uppercase transition-all duration-300 hover:bg-amber-400 hover:text-black hover:shadow-lg hover:shadow-amber-400/30 sm:mt-4 sm:px-8 sm:py-2 sm:text-2xl"
+            className="font-teko mt-8 inline-block border border-(--gold) px-8 py-3 text-xl tracking-[0.2em] text-(--gold) uppercase transition-all duration-300 hover:bg-(--gold) hover:text-black hover:shadow-[0_0_30px_rgba(201,162,39,0.3)] sm:px-10 sm:text-2xl"
           >
             {hero.cta.label}
           </Link>
         )}
+      </div>
+
+      {/* Scroll indicator */}
+      <div
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce"
+        aria-hidden="true"
+      >
+        <div className="h-10 w-6 rounded-full border-2 border-(--gold) p-1 opacity-60">
+          <div
+            className="mx-auto h-2 w-1 rounded-full bg-(--gold)"
+            style={{ animation: "scrollDot 1.5s ease-in-out infinite" }}
+          />
+        </div>
       </div>
     </section>
   );

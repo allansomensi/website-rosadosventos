@@ -30,8 +30,14 @@ export const show = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "linkLocalizacao",
+      title: "Link da Localização (Google Maps / Waze)",
+      type: "url",
+      description: "Opcional. Link do mapa para o local do evento.",
+    }),
+    defineField({
       name: "link",
-      title: "Link (Ingressos/Infos)",
+      title: "Link para Ingressos",
       type: "url",
       description: "Opcional. Ex: link do Sympla, evento do Facebook",
     }),

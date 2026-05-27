@@ -4,7 +4,9 @@ import { hero } from "./hero";
 import { sobre } from "./sobre";
 import { highlight } from "./highlight";
 import { contato } from "./contato";
+import { siteSettings } from "./siteSettings";
+import { areaContratante } from "./areaContratante";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [hero, show, highlight, sobre, contato],
+  types: [hero, show, highlight, sobre, contato, siteSettings, areaContratante],
 };

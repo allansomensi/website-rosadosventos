@@ -12,10 +12,17 @@ type HighlightCard = {
   imageAlt: string;
 };
 
+interface HighlightData {
+  title: string;
+  cards: HighlightCard[];
+}
+
 export default async function Highlight() {
-  const { data: highlight } = await sanityFetch({
+  const { data } = await sanityFetch({
     query: HIGHLIGHTS_QUERY,
   });
+
+  const highlight = data as HighlightData | null;
 
   if (!highlight || !highlight.cards) {
     return null;
@@ -29,7 +36,7 @@ export default async function Highlight() {
         </h2>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-          {highlight.cards.map((card: HighlightCard) => (
+          {highlight.cards.map((card) => (
             <CardItem
               key={card._key}
               imageSrc={card.imageUrl}

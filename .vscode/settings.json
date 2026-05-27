@@ -1,3 +1,8 @@
 {
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "material-icon-theme.folders.associations": {
+    "(main)": "core",
+    "sanity": "api",
+    "schemaTypes": "class",
+    "sections": "content"
+  }
 }
