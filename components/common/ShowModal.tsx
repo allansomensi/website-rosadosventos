@@ -36,19 +36,11 @@ export default function ShowModal({ show, onClose }: ShowModalProps) {
       if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", onKey);
-
-    // iOS-safe scroll lock
-    const scrollY = window.scrollY;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
 
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.position = "";
-      document.body.style.top = "";
-      document.body.style.width = "";
-      window.scrollTo(0, scrollY);
+      document.body.style.overflow = "";
     };
   }, [handleClose]);
 

@@ -14,9 +14,9 @@ interface FooterContactData {
 }
 
 const NAV_LINKS = [
-  { href: "#agenda", label: "Agenda" },
-  { href: "#sobre", label: "Sobre" },
-  { href: "#contato", label: "Contato" },
+  { href: "/#agenda", label: "Agenda" },
+  { href: "/#sobre", label: "Sobre" },
+  { href: "/#contato", label: "Contato" },
   { href: "/contratante", label: "Área do Contratante" },
 ];
 
@@ -46,13 +46,15 @@ export default async function TheFooter({ logoUrl }: { logoUrl: string }) {
               href="/"
               className="flex flex-col items-center gap-4 text-center transition-transform hover:scale-105 md:flex-row md:text-left"
             >
-              <Image
-                src={logoUrl}
-                width={112}
-                height={112}
-                alt="Rosa dos Ventos"
-                className="h-24 w-24 shrink-0 object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.2)] md:h-20 md:w-20"
-              />
+              {logoUrl && logoUrl !== "" && (
+                <Image
+                  src={logoUrl}
+                  width={112}
+                  height={112}
+                  alt="Rosa dos Ventos"
+                  className="h-24 w-24 shrink-0 object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.2)] md:h-20 md:w-20"
+                />
+              )}
               <span className="font-cinzel bg-linear-to-b from-(--gold-light) to-(--gold-dark) bg-clip-text text-2xl font-bold tracking-[0.15em] text-transparent uppercase">
                 Rosa dos Ventos
               </span>

@@ -29,15 +29,17 @@ export default async function TheHero() {
       aria-label="Banner principal"
     >
       {/* Background image */}
-      <Image
-        src={hero.imageUrl}
-        alt={hero.imageAlt}
-        fill
-        className="object-cover object-center"
-        priority
-        sizes="100vw"
-        quality={85}
-      />
+      {hero.imageUrl && hero.imageUrl !== "" && (
+        <Image
+          src={hero.imageUrl}
+          alt={hero.imageAlt}
+          fill
+          className="object-cover object-center"
+          priority
+          sizes="100vw"
+          quality={85}
+        />
+      )}
 
       {/* Gradient overlays */}
       <div className="absolute inset-0 bg-linear-to-t from-[#0a0a0a] via-black/50 to-black/30" />

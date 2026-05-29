@@ -50,13 +50,15 @@ export default async function About() {
 
           <div className="relative w-full lg:w-5/12">
             <div className="relative mx-auto aspect-4/5 w-full max-w-md overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl shadow-black/50">
-              <Image
-                src={about.imageUrl}
-                alt={about.imageAlt}
-                fill
-                className="object-cover transition-transform duration-700 hover:scale-105"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
+              {about.imageUrl && about.imageUrl !== "" && (
+                <Image
+                  src={about.imageUrl}
+                  alt={about.imageAlt}
+                  fill
+                  className="object-cover transition-transform duration-700 hover:scale-105"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                />
+              )}
             </div>
 
             <div className="absolute -inset-4 z-[-1] hidden rounded-3xl border border-(--gold)/20 md:block" />

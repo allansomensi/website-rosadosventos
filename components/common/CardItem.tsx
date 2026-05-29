@@ -21,12 +21,15 @@ export default function CardItem({
   return (
     <div className="transform overflow-hidden rounded-lg bg-zinc-800 shadow-lg transition-transform duration-300 hover:scale-[1.02]">
       <div className="relative h-48 w-full">
-        <Image
-          src={imageSrc}
-          alt={altText}
-          fill
-          className="object-cover object-center"
-        />
+        {imageSrc && imageSrc !== "" && (
+          <Image
+            src={imageSrc}
+            alt={altText}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover object-center"
+          />
+        )}
       </div>
       <div className="p-6">
         <h3 className="font-cinzel mb-2 text-xl font-bold text-amber-400">

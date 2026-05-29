@@ -121,14 +121,15 @@ export default async function Contratante() {
                 >
                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 transition-all duration-500 group-hover:bg-black/20">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-(--gold) text-black shadow-(--gold)/20 shadow-lg transition-transform duration-500 group-hover:scale-110">
-                      <IconPlayerPlayFilled size={32} className="ml-2" />
+                      <IconPlayerPlayFilled size={32} />
                     </div>
                   </div>
-                  {video.thumbnailUrl && (
+                  {video.thumbnailUrl && video.thumbnailUrl !== "" && (
                     <Image
                       src={video.thumbnailUrl}
                       alt={video.title || "Vídeo Rosa dos Ventos"}
                       fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-cover opacity-70 transition-transform duration-700 group-hover:scale-105"
                     />
                   )}

@@ -62,7 +62,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-br" className="scroll-smooth">
+    <html lang="pt-br" className="scroll-smooth" data-scroll-behavior="smooth">
       <body
         className={`${cinzel.variable} ${teko.variable} ${roboto.variable} antialiased`}
       >

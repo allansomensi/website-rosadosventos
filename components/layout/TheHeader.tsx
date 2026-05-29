@@ -6,9 +6,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const NAV_LINKS = [
-  { href: "#agenda", label: "Agenda" },
-  { href: "#sobre", label: "Sobre" },
-  { href: "#contato", label: "Contato" },
+  { href: "/#agenda", label: "Agenda" },
+  { href: "/#sobre", label: "Sobre" },
+  { href: "/#contato", label: "Contato" },
   { href: "/contratante", label: "Área do Contratante" },
 ];
 
@@ -46,13 +46,15 @@ export default function TheHeader({ logoUrl }: { logoUrl: string }) {
             className="flex items-center gap-3 transition-opacity hover:opacity-80"
             onClick={close}
           >
-            <Image
-              src={logoUrl}
-              width={80}
-              height={80}
-              alt="Rosa dos Ventos"
-              className="h-10 w-10 object-contain sm:h-12 sm:w-12 md:h-16 md:w-16"
-            />
+            {logoUrl && logoUrl !== "" && (
+              <Image
+                src={logoUrl}
+                width={80}
+                height={80}
+                alt="Rosa dos Ventos"
+                className="h-10 w-10 object-contain sm:h-12 sm:w-12 md:h-16 md:w-16"
+              />
+            )}
             <span className="font-cinzel hidden bg-linear-to-b from-(--gold-light) to-(--gold-dark) bg-clip-text text-xl font-bold tracking-widest text-transparent uppercase sm:block md:text-2xl">
               Rosa dos Ventos
             </span>
