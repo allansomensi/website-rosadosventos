@@ -34,9 +34,9 @@ export default function TheHeader({ logoUrl }: { logoUrl: string }) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 z-50 w-full transition-all duration-500 ${
+        className={`fixed top-0 left-0 z-50 w-full transform-gpu transition-all duration-500 ${
           scrolled
-            ? "border-b border-(--border-gold) bg-[#0a0a0acc] backdrop-blur-md"
+            ? "bg-[#0a0a0acc] shadow-[0_1px_0_var(--border-gold)] backdrop-blur-md"
             : "bg-transparent"
         }`}
       >
