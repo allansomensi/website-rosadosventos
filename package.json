@@ -9,29 +9,40 @@
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "lint:eslint": "eslint . --max-warnings 0",
     "lint:prettier": "prettier --check .",
-    "lint:fix": "eslint --fix . && prettier --write ."
+    "lint:fix": "eslint --fix . && prettier --write .",
+    "prepare": "husky"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",
     "@tabler/icons-react": "^3.44.0",
     "@vercel/analytics": "^2.0.1",
     "next": "16.2.6",
-    "next-sanity": "^13.0.4",
+    "next-sanity": "^13.0.7",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "sanity": "^5.27.0",
+    "sanity": "^5.28.0",
     "styled-components": "^6.4.2"
   },
   "devDependencies": {
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.0.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.5",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",
     "typescript": "^6"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx,js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }
