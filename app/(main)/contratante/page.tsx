@@ -117,11 +117,12 @@ export default async function Contratante() {
                   href={video.youtubeUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="group relative aspect-video cursor-pointer overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 shadow-2xl transition-all duration-500 hover:border-(--gold)/50 hover:shadow-(--gold)/10"
+                  aria-label={`Assistir ao vídeo: ${video.title}`}
+                  className="group cursor-pointer... relative aspect-video"
                 >
                   <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 transition-all duration-500 group-hover:bg-black/20">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-(--gold) text-black shadow-(--gold)/20 shadow-lg transition-transform duration-500 group-hover:scale-110">
-                      <IconPlayerPlayFilled size={32} />
+                      <IconPlayerPlayFilled size={32} aria-hidden="true" />
                     </div>
                   </div>
                   {video.thumbnailUrl && video.thumbnailUrl !== "" && (

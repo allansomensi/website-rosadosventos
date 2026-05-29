@@ -31,7 +31,10 @@ export default async function Highlight() {
   return (
     <section id="highlights" className="bg-zinc-950 py-16">
       <div className="container mx-auto px-6">
-        <h2 className="font-cinzel mb-12 text-center text-4xl font-bold text-white">
+        <h2
+          id="highlight-title"
+          className="font-cinzel mb-12 text-center text-4xl font-bold text-white"
+        >
           {highlight.title}
         </h2>
 

@@ -31,7 +31,10 @@ export default async function About() {
           <p className="font-teko mb-2 text-xl tracking-[0.2em] text-(--gold) uppercase">
             Nossa História
           </p>
-          <h2 className="font-cinzel text-4xl font-bold text-white md:text-5xl">
+          <h2
+            id="about-title"
+            className="font-cinzel text-4xl font-bold text-white md:text-5xl"
+          >
             {about.title}
           </h2>
         </div>

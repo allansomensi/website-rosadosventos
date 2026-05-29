@@ -7,7 +7,7 @@ import {
   IconTicket,
   IconX,
 } from "@tabler/icons-react";
-import { useCallback, useEffect, useId } from "react";
+import { useCallback, useEffect, useId, useRef } from "react";
 
 interface ShowModalProps {
   show: {
@@ -28,10 +28,13 @@ interface ShowModalProps {
 
 export default function ShowModal({ show, onClose }: ShowModalProps) {
   const titleId = useId();
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   const handleClose = useCallback(() => onClose(), [onClose]);
 
   useEffect(() => {
+    closeBtnRef.current?.focus();
+
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") handleClose();
     };
@@ -68,6 +71,7 @@ export default function ShowModal({ show, onClose }: ShowModalProps) {
 
         {/* Close Button */}
         <button
+          ref={closeBtnRef}
           onClick={handleClose}
           className="absolute top-5 right-5 rounded-full p-1 text-(--text-muted) transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-(--gold)"
           aria-label="Fechar modal"
