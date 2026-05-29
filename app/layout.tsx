@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Cinzel, Roboto, Teko } from "next/font/google";
 import "./globals.css";
@@ -20,6 +20,12 @@ const roboto = Roboto({
   variable: "--font-roboto",
   subsets: ["latin"],
 });
+
+export const viewport: Viewport = {
+  themeColor: "#0a0a0a",
+  width: "device-width",
+  initialScale: 1,
+};
 
 const siteUrl = "https://bandarosadosventos.com.br";
 
@@ -53,6 +59,29 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
+  },
+  openGraph: {
+    title: "Rosa dos Ventos - Banda de Pop Rock",
+    description:
+      "Site oficial da banda Rosa dos Ventos. Confira nossa agenda de shows, fotos, vídeos e biografia.",
+    url: siteUrl,
+    siteName: "Rosa dos Ventos",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Logo da banda Rosa dos Ventos",
+      },
+    ],
+    locale: "pt_BR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Rosa dos Ventos - Banda de Rock",
+    description: "Agenda de shows, fotos e contato da banda.",
+    images: ["/og-image.jpg"],
   },
 };
 
