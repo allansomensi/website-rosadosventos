@@ -88,3 +88,14 @@ export const AREA_CONTRATANTE_QUERY = groq`
     }
   }
 `;
+
+export const BAND_MEMBERS_QUERY = groq`
+  *[_type == "bandMember"] | order(order asc) {
+    _id,
+    name,
+    role,
+    description,
+    "imageUrl": image.asset->url,
+    "imageAlt": image.alt
+  }
+`;
