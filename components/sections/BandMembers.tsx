@@ -1,13 +1,15 @@
 import Image from "next/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { BAND_MEMBERS_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
+import { SanityImageSource } from "@sanity/image-url";
 
 interface BandMember {
   _id: string;
   name: string;
   role: string;
   description: string;
-  imageUrl: string | null;
+  image: SanityImageSource;
   imageAlt: string | null;
 }
 
@@ -46,9 +48,9 @@ export default async function BandMembers() {
               <div className="relative h-105 w-full overflow-hidden rounded-4xl border border-white/5 bg-zinc-900/20 backdrop-blur-md transition-all duration-700 ease-out group-hover:border-(--gold)/40 group-hover:bg-zinc-900/40 group-hover:shadow-(--gold)/10 group-hover:shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]">
                 <div className="absolute inset-0 pt-6">
                   <div className="h-full w-full origin-bottom transition-transform duration-300 ease-out will-change-transform group-hover:scale-105">
-                    {member.imageUrl && (
+                    {member.image && (
                       <Image
-                        src={member.imageUrl}
+                        src={urlFor(member.image).width(400).height(500).url()}
                         alt={member.imageAlt || `Foto de ${member.name}`}
                         width={400}
                         height={500}
