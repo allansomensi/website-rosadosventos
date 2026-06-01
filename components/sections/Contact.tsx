@@ -1,11 +1,4 @@
-import {
-  IconBrandFacebook,
-  IconBrandInstagram,
-  IconBrandWhatsapp,
-  IconBrandYoutube,
-  IconLink,
-  IconMail,
-} from "@tabler/icons-react";
+import { IconBrandWhatsapp, IconMail } from "@tabler/icons-react";
 import { sanityFetch } from "@/sanity/lib/live";
 import { CONTACT_QUERY } from "@/sanity/lib/queries";
 
@@ -16,22 +9,7 @@ interface ContactData {
   emailAddress?: string;
   whatsappTitle?: string;
   whatsappContacts?: { text: string; url: string }[];
-  socialTitle?: string;
-  socialLinks?: { platform: string; url: string }[];
 }
-
-const getSocialIcon = (platform: string) => {
-  switch (platform.toLowerCase()) {
-    case "instagram":
-      return <IconBrandInstagram size={32} aria-hidden="true" />;
-    case "youtube":
-      return <IconBrandYoutube size={32} aria-hidden="true" />;
-    case "facebook":
-      return <IconBrandFacebook size={32} aria-hidden="true" />;
-    default:
-      return <IconLink size={32} aria-hidden="true" />;
-  }
-};
 
 interface ContactCardProps {
   icon: React.ReactNode;
@@ -46,7 +24,7 @@ function ContactCard({ icon, label, value, href, external }: ContactCardProps) {
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="group bg-background flex w-full flex-col items-center rounded-2xl border border-(--border) p-6 transition-all duration-300 hover:-translate-y-1 hover:border-(--border-gold) hover:bg-(--surface-2) hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] sm:p-8"
+      className="group bg-background mx-auto flex w-full max-w-95 flex-col items-center rounded-2xl border border-(--border) p-6 transition-all duration-300 hover:-translate-y-1 hover:border-(--border-gold) hover:bg-(--surface-2) hover:shadow-[0_10px_30px_rgba(0,0,0,0.5)] sm:p-8"
     >
       <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-(--surface-3) text-(--gold) transition-all duration-300 group-hover:scale-110 group-hover:bg-(--gold) group-hover:text-black sm:h-16 sm:w-16">
         {icon}
@@ -68,14 +46,14 @@ export default async function Contact() {
   if (!contact) return null;
 
   const totalCards =
-    (contact.whatsappContacts?.length ?? 0) +
-    (contact.emailAddress ? 1 : 0) +
-    (contact.socialLinks?.length ?? 0);
+    (contact.whatsappContacts?.length ?? 0) + (contact.emailAddress ? 1 : 0);
 
   const gridClass =
-    totalCards <= 3
-      ? "flex flex-wrap justify-center gap-6"
-      : "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3";
+    totalCards === 1
+      ? "flex justify-center"
+      : totalCards === 2
+        ? "grid grid-cols-1 gap-6 sm:grid-cols-2 max-w-3xl mx-auto"
+        : "grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3";
 
   return (
     <section
@@ -117,20 +95,6 @@ export default async function Contact() {
               href={`mailto:${contact.emailAddress}`}
             />
           )}
-
-          {contact.socialLinks?.map((social, index) => (
-            <ContactCard
-              key={index}
-              icon={getSocialIcon(social.platform)}
-              label={contact.socialTitle ?? "Redes Sociais"}
-              value={
-                social.platform.charAt(0).toUpperCase() +
-                social.platform.slice(1)
-              }
-              href={social.url}
-              external
-            />
-          ))}
         </div>
       </div>
     </section>

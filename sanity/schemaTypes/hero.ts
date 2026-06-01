@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 
 export const hero = defineType({
   name: "hero",
-  title: "Seção Hero (Banner)",
+  title: "Seção Hero",
   type: "document",
   fields: [
     defineField({
