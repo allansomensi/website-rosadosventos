@@ -2,9 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { sanityFetch } from "@/sanity/lib/live";
 import { HERO_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
+import { SanityImageSource } from "@sanity/image-url";
 
 interface HeroData {
-  imageUrl: string;
+  heroImage: SanityImageSource;
   imageAlt: string;
   subheading?: string;
   headingLine1?: string;
@@ -27,10 +29,10 @@ export default async function TheHero() {
       aria-label="Banner principal"
     >
       {/* Background image */}
-      {hero.imageUrl && hero.imageUrl !== "" && (
+      {hero.heroImage && (
         <Image
-          src={hero.imageUrl}
-          alt={hero.imageAlt}
+          src={urlFor(hero.heroImage).width(1920).height(1080).url()}
+          alt={hero.imageAlt || "Banner Principal"}
           fill
           className="object-cover object-center"
           priority

@@ -2,7 +2,7 @@ import { groq } from "next-sanity";
 
 export const HERO_QUERY = groq`
   *[_type == "hero"][0] {
-    "imageUrl": heroImage.asset->url,
+    heroImage,
     "imageAlt": heroImage.alt,
     subheading,
     headingLine1,
