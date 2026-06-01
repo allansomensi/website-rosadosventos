@@ -3,6 +3,7 @@
     "(main)": "core",
     "sanity": "api",
     "schemaTypes": "class",
-    "sections": "content"
+    "sections": "content",
+    "loja": "store"
   }
 }

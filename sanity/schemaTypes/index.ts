@@ -7,6 +7,7 @@ import { contato } from "./contato";
 import { siteSettings } from "./siteSettings";
 import { areaContratante } from "./areaContratante";
 import { bandMember } from "./bandMember";
+import { produto } from "./produto";
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -18,5 +19,6 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     siteSettings,
     areaContratante,
     bandMember,
+    produto,
   ],
 };

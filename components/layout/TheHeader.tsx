@@ -9,6 +9,7 @@ const NAV_LINKS = [
   { href: "/#agenda", label: "Agenda" },
   { href: "/#sobre", label: "Sobre" },
   { href: "/#contato", label: "Contato" },
+  { href: "/loja", label: "Loja" },
   { href: "/contratante", label: "Área do Contratante" },
 ];
 

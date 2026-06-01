@@ -98,3 +98,20 @@ export const BAND_MEMBERS_QUERY = groq`
     image 
   }
 `;
+
+export const LOJA_QUERY = groq`
+  *[_type == "produto"] | order(destaque desc, ordem asc, nome asc) {
+    _id,
+    nome,
+    descricao,
+    preco,
+    categoria,
+    tamanhos,
+    destaque,
+    disponivel,
+    imagens[] {
+      asset,
+      alt
+    }
+  }
+`;
