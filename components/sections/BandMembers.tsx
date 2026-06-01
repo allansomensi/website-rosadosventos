@@ -46,7 +46,7 @@ export default async function BandMembers() {
               className="group relative flex w-full max-w-[320px] flex-col items-center transition-transform duration-500 ease-out hover:-translate-y-2"
             >
               <div className="relative h-105 w-full overflow-hidden rounded-4xl border border-white/5 bg-zinc-900/20 backdrop-blur-md transition-all duration-700 ease-out group-hover:border-(--gold)/40 group-hover:bg-zinc-900/40 group-hover:shadow-(--gold)/10 group-hover:shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]">
-                <div className="absolute inset-0 pt-6">
+                <div className="absolute inset-0">
                   <div className="h-full w-full origin-bottom transition-transform duration-300 ease-out will-change-transform group-hover:scale-105">
                     {member.image && (
                       <Image
@@ -59,7 +59,6 @@ export default async function BandMembers() {
                     )}
                   </div>
                 </div>
-
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-linear-to-t from-zinc-950/90 to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-60" />
               </div>
 

@@ -25,7 +25,7 @@ export default async function TheHero() {
 
   return (
     <section
-      className="relative flex min-h-svh items-center justify-center overflow-hidden"
+      className="relative flex h-[70svh] items-center justify-center overflow-hidden md:min-h-svh"
       aria-label="Banner principal"
     >
       {/* Background image */}
