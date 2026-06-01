@@ -43,7 +43,7 @@ export const HIGHLIGHTS_QUERY = groq`
       description,
       linkText,
       linkHref,
-      "imageUrl": image.asset->url,
+      image,
       "imageAlt": image.alt
     }
   }

@@ -1,6 +1,8 @@
 import CardItem from "../common/CardItem";
 import { sanityFetch } from "@/sanity/lib/live";
 import { HIGHLIGHTS_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
+import { SanityImageSource } from "@sanity/image-url";
 
 type HighlightCard = {
   _key: string;
@@ -8,7 +10,7 @@ type HighlightCard = {
   description: string;
   linkText: string;
   linkHref: string;
-  imageUrl: string;
+  image: SanityImageSource;
   imageAlt: string;
 };
 
@@ -42,8 +44,12 @@ export default async function Highlight() {
           {highlight.cards.map((card) => (
             <CardItem
               key={card._key}
-              imageSrc={card.imageUrl}
-              altText={card.imageAlt}
+              imageSrc={
+                card.image
+                  ? urlFor(card.image).width(800).height(600).url()
+                  : ""
+              }
+              altText={card.imageAlt || card.title}
               title={card.title}
               description={card.description}
               linkHref={card.linkHref}
