@@ -1,11 +1,13 @@
 import Image from "next/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { ABOUT_QUERY } from "@/sanity/lib/queries";
+import { urlFor } from "@/sanity/lib/image";
+import { SanityImageSource } from "@sanity/image-url";
 
 interface AboutData {
   title?: string;
   bio?: string;
-  imageUrl: string;
+  image: SanityImageSource;
   imageAlt: string;
 }
 
@@ -53,9 +55,9 @@ export default async function About() {
 
           <div className="relative w-full lg:w-5/12">
             <div className="relative mx-auto aspect-4/5 w-full max-w-md overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900 shadow-2xl shadow-black/50">
-              {about.imageUrl && about.imageUrl !== "" && (
+              {about.image && (
                 <Image
-                  src={about.imageUrl}
+                  src={urlFor(about.image).width(800).height(1000).url()}
                   alt={about.imageAlt}
                   fill
                   className="object-cover transition-transform duration-700 hover:scale-105"

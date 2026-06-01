@@ -29,7 +29,7 @@ export const ABOUT_QUERY = groq`
   *[_type == "sobre"][0] {
     title,
     bio,
-    "imageUrl": image.asset->url,
+    image,
     "imageAlt": image.alt
   }
 `;
