@@ -118,24 +118,30 @@ export default async function Contratante() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={`Assistir ao vídeo: ${video.title}`}
-                  className="group cursor-pointer... relative aspect-video"
+                  className="group relative block aspect-video cursor-pointer overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900 transition-colors duration-300 hover:border-(--gold)/30"
                 >
-                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/50 transition-all duration-500 group-hover:bg-black/20">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-(--gold) text-black shadow-(--gold)/20 shadow-lg transition-transform duration-500 group-hover:scale-110">
-                      <IconPlayerPlayFilled size={32} aria-hidden="true" />
+                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 transition-colors duration-300 group-hover:bg-transparent">
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-(--gold) text-black shadow-(--gold)/10 shadow-lg transition-all duration-300 ease-out group-hover:scale-110 group-hover:shadow-(--gold)/40">
+                      <IconPlayerPlayFilled
+                        size={32}
+                        aria-hidden="true"
+                        className="ml-1"
+                      />
                     </div>
                   </div>
+
                   {video.thumbnailUrl && video.thumbnailUrl !== "" && (
                     <Image
                       src={video.thumbnailUrl}
                       alt={video.title || "Vídeo Rosa dos Ventos"}
                       fill
                       sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover opacity-70 transition-transform duration-700 group-hover:scale-105"
+                      className="object-cover opacity-85 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
                     />
                   )}
-                  <div className="absolute right-0 bottom-0 left-0 z-20 bg-linear-to-t from-black/90 to-transparent p-6">
-                    <h3 className="font-teko text-2xl tracking-wide text-white">
+
+                  <div className="absolute right-0 bottom-0 left-0 z-20 bg-linear-to-t from-black/90 via-black/50 to-transparent p-6 transition-colors duration-300 group-hover:from-black/70">
+                    <h3 className="font-teko text-2xl tracking-wide text-white transition-transform duration-300 ease-out group-hover:-translate-y-1">
                       {video.title}
                     </h3>
                   </div>
