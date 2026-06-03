@@ -3,6 +3,7 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { BAND_MEMBERS_QUERY } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import { SanityImageSource } from "@sanity/image-url";
+import ExpandableText from "@/components/common/ExpandableText";
 
 interface BandMember {
   _id: string;
@@ -74,7 +75,7 @@ export default async function BandMembers() {
                 <div className="mt-3 mb-4 h-0.5 w-6 bg-(--gold)/20 transition-all duration-500 group-hover:w-16 group-hover:bg-(--gold)/60" />
 
                 <p className="mx-auto max-w-70 font-sans text-sm leading-relaxed font-light text-zinc-500 transition-colors duration-500 group-hover:text-zinc-300">
-                  {member.description}
+                  <ExpandableText text={member.description} maxLength={110} />
                 </p>
               </div>
             </div>
