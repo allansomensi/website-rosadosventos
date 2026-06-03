@@ -95,7 +95,8 @@ export const BAND_MEMBERS_QUERY = groq`
     name,
     role,
     description,
-    image 
+    image,
+    "imageAlt": image.alt
   }
 `;
 

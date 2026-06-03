@@ -3,7 +3,7 @@
 import { IconMenu2, IconX } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const NAV_LINKS = [
   { href: "/#agenda", label: "Agenda" },
@@ -30,7 +30,7 @@ export default function TheHeader({ logoUrl }: { logoUrl: string }) {
     };
   }, [isOpen]);
 
-  const close = () => setIsOpen(false);
+  const close = useCallback(() => setIsOpen(false), []);
 
   return (
     <>
@@ -54,6 +54,7 @@ export default function TheHeader({ logoUrl }: { logoUrl: string }) {
                 height={80}
                 alt="Rosa dos Ventos"
                 className="h-10 w-10 object-contain sm:h-12 sm:w-12 md:h-16 md:w-16"
+                priority
               />
             )}
             <span className="font-cinzel hidden bg-linear-to-b from-(--gold-light) to-(--gold-dark) bg-clip-text text-xl font-bold tracking-widest text-transparent uppercase sm:block md:text-2xl">

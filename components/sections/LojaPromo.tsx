@@ -14,11 +14,7 @@ export default function LojaPromo() {
     >
       {/* Fundo decorativo */}
       <div
-        className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-175 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-10"
-        style={{
-          background:
-            "radial-gradient(ellipse at center, var(--gold) 0%, transparent 70%)",
-        }}
+        className="pointer-events-none absolute top-1/2 left-1/2 h-125 w-175 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,var(--gold)_0%,transparent_70%)] opacity-10"
         aria-hidden="true"
       />
 
@@ -48,13 +44,8 @@ export default function LojaPromo() {
             >
               Vista as cores
               <br />
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage:
-                    "linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark))",
-                }}
-              >
+              {/* Título */}
+              <span className="bg-[linear-gradient(135deg,var(--gold-light),var(--gold),var(--gold-dark))] bg-clip-text text-transparent">
                 da banda.
               </span>
             </h2>
@@ -127,8 +118,7 @@ export default function LojaPromo() {
 
             {/* Halo dourado atrás do card central */}
             <div
-              className="pointer-events-none absolute z-0 h-48 w-48 rounded-full opacity-20 blur-2xl"
-              style={{ background: "var(--gold)" }}
+              className="pointer-events-none absolute z-0 h-48 w-48 rounded-full bg-(--gold) opacity-20 blur-2xl"
               aria-hidden="true"
             />
           </div>

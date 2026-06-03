@@ -4,11 +4,18 @@ import { LOJA_QUERY, CONTACT_QUERY } from "@/sanity/lib/queries";
 import { urlFor } from "@/sanity/lib/image";
 import { SanityImageSource } from "@sanity/image-url";
 import ProductCard from "@/components/common/ProductCard";
+import { Metadata } from "next";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Loja",
   description:
     "Produtos oficiais da banda Rosa dos Ventos. Camisetas, bonés, canecas e muito mais. Compre via WhatsApp.",
+  openGraph: {
+    title: "Loja | Rosa dos Ventos",
+    description:
+      "Produtos oficiais da banda. Camisetas, bonés, canecas e mais. Compre direto pelo WhatsApp.",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+  },
 };
 
 interface ProdutoSanity {

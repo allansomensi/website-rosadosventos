@@ -8,11 +8,18 @@ import {
 import Image from "next/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { AREA_CONTRATANTE_QUERY, CONTACT_QUERY } from "@/sanity/lib/queries";
+import { Metadata } from "next";
 
-export const metadata = {
-  title: "Área do Contratante | Rosa dos Ventos",
+export const metadata: Metadata = {
+  title: "Área do Contratante",
   description:
     "Material oficial da banda Rosa dos Ventos exclusivo para contratantes, produtores e donos de casas de show.",
+  openGraph: {
+    title: "Área do Contratante | Rosa dos Ventos",
+    description:
+      "Portfólio, fotos, logos e vídeos da Rosa dos Ventos para contratantes e produtores.",
+    images: [{ url: "/og-image.jpg", width: 1200, height: 630 }],
+  },
 };
 
 interface VideoData {

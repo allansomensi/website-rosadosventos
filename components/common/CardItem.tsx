@@ -19,7 +19,7 @@ export default function CardItem({
   linkText,
 }: CardItemProps) {
   return (
-    <div className="transform overflow-hidden rounded-lg bg-zinc-800 shadow-lg transition-transform duration-300 hover:scale-[1.02]">
+    <div className="transform overflow-hidden rounded-lg bg-(--surface-2) shadow-lg transition-transform duration-300 hover:scale-[1.02]">
       <div className="relative h-48 w-full">
         {imageSrc && imageSrc !== "" && (
           <Image
@@ -32,15 +32,15 @@ export default function CardItem({
         )}
       </div>
       <div className="p-6">
-        <h3 className="font-cinzel mb-2 text-xl font-bold text-amber-400">
+        <h3 className="font-cinzel mb-2 text-xl font-bold text-(--gold)">
           {title}
         </h3>
-        <p className="font-teko mb-4 text-lg leading-relaxed text-gray-300">
+        <p className="font-teko mb-4 text-lg leading-relaxed text-zinc-300">
           {description}
         </p>
         <Link
           href={linkHref}
-          className="font-teko text-lg text-amber-400 uppercase transition-colors duration-300 hover:text-amber-500"
+          className="font-teko text-lg text-(--gold) uppercase transition-colors duration-300 hover:text-(--gold-light)"
         >
           {linkText} &rarr;
         </Link>

@@ -2,31 +2,6 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { SHOWS_QUERY } from "@/sanity/lib/queries";
 import ShowCard from "../common/ShowCard";
 
-const DIAS_SEMANA = [
-  "Domingo",
-  "Segunda-feira",
-  "Terça-feira",
-  "Quarta-feira",
-  "Quinta-feira",
-  "Sexta-feira",
-  "Sábado",
-];
-
-const MESES = [
-  "Jan",
-  "Fev",
-  "Mar",
-  "Abr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Set",
-  "Out",
-  "Nov",
-  "Dez",
-];
-
 interface SanityShow {
   _id: string;
   data: string;
@@ -44,12 +19,8 @@ interface FormattedShow extends SanityShow {
   diaSemana: string;
 }
 
-function parseShowDate(isoString: string): Date {
-  return new Date(isoString);
-}
-
 function formatShow(show: SanityShow): FormattedShow {
-  const date = parseShowDate(show.data);
+  const date = new Date(show.data);
   const hasTime =
     show.data.includes("T") &&
     !show.data.endsWith("T00:00:00Z") &&
@@ -57,21 +28,21 @@ function formatShow(show: SanityShow): FormattedShow {
 
   const timeZone = "America/Sao_Paulo";
 
-  const dateInTz = new Date(date.toLocaleString("en-US", { timeZone }));
+  const formatter = (options: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat("pt-BR", { timeZone, ...options }).format(date);
+
+  const rawMonth = formatter({ month: "short" }).replace(".", "");
+  const rawWeekday = formatter({ weekday: "long" }).replace("-feira", "");
 
   return {
     ...show,
-    dia: String(dateInTz.getDate()).padStart(2, "0"),
-    mes: MESES[dateInTz.getMonth()],
-    ano: String(dateInTz.getFullYear()),
+    dia: formatter({ day: "2-digit" }),
+    mes: rawMonth.charAt(0).toUpperCase() + rawMonth.slice(1),
+    ano: formatter({ year: "numeric" }),
     horario: hasTime
-      ? date.toLocaleTimeString("pt-BR", {
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone,
-        })
+      ? formatter({ hour: "2-digit", minute: "2-digit" })
       : "A confirmar",
-    diaSemana: DIAS_SEMANA[dateInTz.getDay()],
+    diaSemana: rawWeekday.charAt(0).toUpperCase() + rawWeekday.slice(1),
   };
 }
 
@@ -81,27 +52,18 @@ export default async function Agenda() {
 
   const timeZone = "America/Sao_Paulo";
 
-  const todayUTC = new Date();
-  const todayInTz = new Date(todayUTC.toLocaleString("en-US", { timeZone }));
-  const todayMidnight = new Date(
-    todayInTz.getFullYear(),
-    todayInTz.getMonth(),
-    todayInTz.getDate(),
-  ).getTime();
+  const getZonedDateString = (d: Date) =>
+    new Intl.DateTimeFormat("sv-SE", { timeZone }).format(d);
+
+  const todayZoned = getZonedDateString(new Date());
 
   const upcomingShows: FormattedShow[] = shows
     .filter((show) => {
-      const d = new Date(show.data);
-      const dateInTz = new Date(d.toLocaleString("en-US", { timeZone }));
-      const showMidnight = new Date(
-        dateInTz.getFullYear(),
-        dateInTz.getMonth(),
-        dateInTz.getDate(),
-      ).getTime();
-
-      return showMidnight >= todayMidnight;
+      const showZoned = getZonedDateString(new Date(show.data));
+      return showZoned >= todayZoned;
     })
-    .map(formatShow);
+    .map(formatShow)
+    .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
 
   const currentYear = new Date().getFullYear();
 
