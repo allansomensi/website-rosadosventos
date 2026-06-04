@@ -8,6 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { sanityFetch } from "@/sanity/lib/live";
 import { CONTACT_QUERY } from "@/sanity/lib/queries";
+import pkg from "../../package.json";
 
 interface FooterContactData {
   socialLinks?: { platform: string; url: string }[];
@@ -98,11 +99,17 @@ export default async function TheFooter({ logoUrl }: { logoUrl: string }) {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-center gap-4 border-t border-zinc-800/60 pt-8 text-center md:mt-20 md:flex-row">
-          <p className="text-sm tracking-wide text-zinc-500">
-            &copy; {new Date().getFullYear()} Banda Rosa dos Ventos. Todos os
-            direitos reservados.
-          </p>
+        <div className="mt-12 border-t border-zinc-800/60 pt-8 md:mt-20">
+          <div className="relative flex flex-col items-center justify-center text-center">
+            <p className="text-sm tracking-wide text-zinc-500">
+              &copy; {new Date().getFullYear()} Banda Rosa dos Ventos. Todos os
+              direitos reservados.
+            </p>
+
+            <p className="mt-2 text-xs tracking-wide text-zinc-600 md:absolute md:top-1/2 md:right-0 md:mt-0 md:-translate-y-1/2">
+              v{pkg.version}
+            </p>
+          </div>
         </div>
       </div>
     </footer>
