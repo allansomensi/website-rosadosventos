@@ -1,10 +1,8 @@
 const ITEMS = [
-  "Rock ao vivo",
+  "Rosa dos Ventos",
   "Pop rock",
-  "Rosa dos Ventos",
-  "Bora cantar junto",
-  "Som na caixa",
-  "Rosa dos Ventos",
+  "Música ao vivo",
+  "Shows e eventos",
 ];
 
 function Row({ hidden = false }: { hidden?: boolean }) {

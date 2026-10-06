@@ -63,7 +63,7 @@ export default function ShowModal({ show, isNext, onClose }: ShowModalProps) {
 
   const handleShare = async () => {
     const url = `${window.location.origin}/#agenda`;
-    const text = `Rosa dos Ventos ao vivo — ${show.local}, ${show.cidade} · ${show.dia}/${show.mes}`;
+    const text = `Show da Rosa dos Ventos em ${show.local}, ${show.cidade}, ${show.dia} de ${show.mes}.`;
 
     try {
       if (navigator.share) {
@@ -165,7 +165,7 @@ export default function ShowModal({ show, isNext, onClose }: ShowModalProps) {
                   className={buttonStyles({ className: "sm:flex-1" })}
                 >
                   <IconTicket size={20} aria-hidden="true" />
-                  Garantir ingresso
+                  Comprar ingresso
                 </a>
               )}
               {show.linkLocalizacao && (

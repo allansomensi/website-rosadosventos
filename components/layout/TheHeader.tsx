@@ -171,8 +171,8 @@ export default function TheHeader({
             <Link
               href="/"
               onClick={close}
-              className="group flex items-center gap-3"
-              aria-label={`${SITE_NAME} — página inicial`}
+              className="flex items-center gap-3 transition-opacity hover:opacity-80"
+              aria-label={`${SITE_NAME}, página inicial`}
             >
               {logoUrl && (
                 <Image
@@ -181,7 +181,7 @@ export default function TheHeader({
                   height={96}
                   alt=""
                   preload
-                  className="h-10 w-10 object-contain transition-transform duration-700 ease-(--ease-out-expo) group-hover:rotate-45 lg:h-12 lg:w-12"
+                  className="h-10 w-10 object-contain lg:h-12 lg:w-12"
                 />
               )}
               <span className="font-display text-bone text-xl leading-none font-extrabold tracking-[0.06em] uppercase lg:text-2xl">

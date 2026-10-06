@@ -36,8 +36,8 @@ export default function TheFooter({
           <div className="sm:col-span-2 lg:col-span-5">
             <Link
               href="/"
-              className="group inline-flex items-center gap-4"
-              aria-label={`${SITE_NAME} — página inicial`}
+              className="inline-flex items-center gap-4 transition-opacity hover:opacity-80"
+              aria-label={`${SITE_NAME}, página inicial`}
             >
               {logoUrl && (
                 <Image
@@ -45,7 +45,7 @@ export default function TheFooter({
                   width={128}
                   height={128}
                   alt=""
-                  className="h-16 w-16 object-contain transition-transform duration-700 ease-(--ease-out-expo) group-hover:rotate-45"
+                  className="h-16 w-16 object-contain"
                 />
               )}
               <span className="font-display text-bone text-3xl leading-[0.9] font-extrabold tracking-wide uppercase">
@@ -55,15 +55,14 @@ export default function TheFooter({
               </span>
             </Link>
             <p className="text-bone-muted mt-6 max-w-sm text-base leading-relaxed">
-              Pop rock ao vivo, do primeiro acorde ao último bis. Bora fazer
-              barulho junto?
+              Banda de pop rock para shows e eventos.
             </p>
             <SocialLinks links={contact?.socialLinks} className="mt-6" />
           </div>
 
           {/* Navegação */}
           <nav aria-label="Rodapé" className="lg:col-span-3 lg:col-start-6">
-            <FooterHeading>Navegue</FooterHeading>
+            <FooterHeading>Navegação</FooterHeading>
             <ul className="flex flex-col gap-3">
               {[...NAV_LINKS, CONTRATANTE_LINK].map((link) => (
                 <li key={link.href}>
@@ -80,7 +79,7 @@ export default function TheFooter({
 
           {/* Contato */}
           <div className="lg:col-span-4 lg:col-start-9">
-            <FooterHeading>Fale com a gente</FooterHeading>
+            <FooterHeading>Contato</FooterHeading>
             <ul className="flex flex-col gap-4">
               {whatsapp && (
                 <li>

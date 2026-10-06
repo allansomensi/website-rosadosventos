@@ -228,12 +228,12 @@ export default function ProductCard({
               {disponivel ? (
                 <>
                   <IconBrandWhatsapp size={20} aria-hidden="true" />
-                  Quero este
+                  Tenho interesse
                 </>
               ) : (
                 <>
                   <IconBell size={18} aria-hidden="true" />
-                  Avise quando voltar
+                  Avisar quando voltar
                 </>
               )}
             </a>

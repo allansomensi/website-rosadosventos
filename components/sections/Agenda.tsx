@@ -54,11 +54,11 @@ export default async function Agenda() {
           <div className="reveal border-bone/12 flex flex-col items-center rounded-sm border border-dashed px-6 py-16 text-center sm:py-20">
             <CompassRose className="text-brass/70 animate-spin-slow h-16 w-16" />
             <p className="font-display text-bone mt-6 text-3xl font-extrabold uppercase sm:text-4xl">
-              Novas datas em breve
+              Nenhum show agendado
             </p>
             <p className="text-bone-muted mt-3 max-w-md">
-              Estamos acertando os próximos rolês. Siga a banda nas redes e seja
-              o primeiro a saber quando a agenda abrir.
+              As próximas datas serão divulgadas aqui e nas redes sociais da
+              banda.
             </p>
             <SocialLinks
               links={contact?.socialLinks}

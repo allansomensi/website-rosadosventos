@@ -33,10 +33,11 @@ export default async function Contact() {
             id="contact-title"
             className="font-display text-bone mt-4 text-[clamp(2.75rem,9vw,5.5rem)] leading-[0.88] font-extrabold tracking-tight text-balance uppercase"
           >
-            {contact.subtitle || "Bora conversar?"}
+            {contact.subtitle || "Fale com a banda"}
           </h2>
           <p className="text-bone-muted mt-6 max-w-md text-base leading-relaxed sm:text-lg">
-            Show, evento, parceria ou só pra dar um alô — chama a gente.
+            Para shows, eventos e parcerias, entre em contato pelo WhatsApp ou
+            por e-mail.
           </p>
 
           <Link

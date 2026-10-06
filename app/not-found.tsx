@@ -10,12 +10,11 @@ export default function NotFound() {
         Erro 404
       </p>
       <h1 className="font-display mt-4 text-[clamp(3.5rem,14vw,9rem)] leading-[0.85] font-black uppercase">
-        Perdeu
-        <span className="text-brass-gradient block">o rumo?</span>
+        Página não
+        <span className="text-brass-gradient block">encontrada</span>
       </h1>
       <p className="text-bone-muted mt-6 max-w-sm">
-        Nem a rosa dos ventos encontrou esta página. Bora voltar para o palco
-        principal.
+        O endereço acessado não existe ou foi removido.
       </p>
       <div className="mt-10 flex flex-col gap-3 sm:flex-row">
         <Link href="/" className={buttonStyles({ size: "lg" })}>

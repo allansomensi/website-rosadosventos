@@ -128,9 +128,9 @@ export default async function Contratante() {
                 icon={
                   <IconFileTypePdf size={28} stroke={1.5} aria-hidden="true" />
                 }
-                label="Press kit"
-                title="Portfólio completo"
-                text="Apresentação da banda em PDF, pronta para enviar à sua equipe."
+                label="PDF"
+                title="Portfólio"
+                text="Apresentação completa da banda."
                 cta="Baixar portfólio"
               />
             )}
@@ -140,7 +140,7 @@ export default async function Contratante() {
                 icon={<IconPhoto size={28} stroke={1.5} aria-hidden="true" />}
                 label="Google Drive"
                 title="Fotos e logos"
-                text="Imagens em alta resolução e logotipos para divulgação do evento."
+                text="Fotos em alta resolução e logotipos para divulgação."
                 cta="Abrir pasta"
               />
             )}
@@ -157,7 +157,7 @@ export default async function Contratante() {
             id="videos-title"
             eyebrow="Ao vivo"
             title="Material em vídeo"
-            description="Veja a banda em ação — repertório, palco e energia do público."
+            description="Registros de apresentações da banda."
             className="reveal mb-10 sm:mb-14"
           />
           <div className="reveal">
@@ -182,14 +182,14 @@ export default async function Contratante() {
                 Pronto para fechar negócio?
               </h2>
               <p className="text-bone-muted mt-4 max-w-md">
-                Conte a data, a cidade e o tipo de evento. A gente monta a
-                proposta ideal para o seu palco.
+                Envie a data, a cidade e o tipo de evento para receber um
+                orçamento.
               </p>
               {whatsapp && (
                 <a
                   href={whatsappLink(
                     whatsapp.url,
-                    "Olá! Vim pela Área do Contratante e gostaria de um orçamento para show da Rosa dos Ventos.",
+                    "Olá! Gostaria de solicitar um orçamento para um show da Rosa dos Ventos.",
                   )}
                   target="_blank"
                   rel="noopener noreferrer"

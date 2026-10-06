@@ -70,9 +70,8 @@ export default async function LojaPromo() {
                 <span className="text-brass-gradient block">da banda.</span>
               </h2>
               <p className="text-bone-muted mt-6 max-w-md text-base leading-relaxed sm:text-lg">
-                Camisetas, bonés, canecas e muito mais. Escolha o seu e finalize
-                direto com a gente pelo WhatsApp — sem cadastro, sem
-                complicação.
+                Camisetas, bonés, canecas e outros produtos oficiais da banda.
+                Os pedidos são feitos pelo WhatsApp.
               </p>
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
                 <Link href="/loja" className={buttonStyles({ size: "lg" })}>

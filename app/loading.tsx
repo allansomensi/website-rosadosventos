@@ -8,7 +8,7 @@ export default function Loading() {
     >
       <CompassRose className="text-brass h-16 w-16 animate-spin [animation-duration:3s]" />
       <span className="text-bone-dim font-mono text-[11px] tracking-[0.3em] uppercase">
-        Afinando os instrumentos…
+        Carregando
       </span>
     </div>
   );

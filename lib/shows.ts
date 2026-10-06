@@ -87,7 +87,7 @@ export function googleCalendarUrl(show: FormattedShow) {
 
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: `Rosa dos Ventos — ${show.local}`,
+    text: `Show Rosa dos Ventos - ${show.local}`,
     dates,
     location: show.cidade,
     details: show.link

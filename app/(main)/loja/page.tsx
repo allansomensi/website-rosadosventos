@@ -47,18 +47,18 @@ interface ProdutoSanity {
 const STEPS = [
   {
     Icon: IconShirt,
-    title: "Escolha",
-    text: "Navegue pelos produtos e selecione o tamanho, se houver.",
+    title: "Escolha o produto",
+    text: "Selecione também o tamanho, quando houver.",
   },
   {
     Icon: IconMessageCircle,
-    title: "Chame no WhatsApp",
-    text: "Toque em “Quero este” — a mensagem já vai pronta.",
+    title: "Envie pelo WhatsApp",
+    text: "O botão “Tenho interesse” abre a conversa com a mensagem pronta.",
   },
   {
     Icon: IconPackage,
-    title: "Combine e receba",
-    text: "Acertamos pagamento e entrega direto com você.",
+    title: "Pagamento e entrega",
+    text: "Combinados diretamente com a banda.",
   },
 ];
 
@@ -92,7 +92,7 @@ export default async function Loja() {
             Loja <span className="text-brass-gradient">oficial</span>
           </>
         }
-        description="Leve um pedaço da Rosa dos Ventos com você. Escolha o produto, toque em “Quero este” e finalize a compra direto com a banda pelo WhatsApp."
+        description="Produtos oficiais da Rosa dos Ventos. Os pedidos são feitos pelo WhatsApp, diretamente com a banda."
       >
         <ol className="grid grid-cols-1 gap-px overflow-hidden rounded-sm sm:grid-cols-3">
           {STEPS.map(({ Icon, title, text }, i) => (
@@ -131,10 +131,10 @@ export default async function Loja() {
               <IconShoppingBag size={30} stroke={1.5} aria-hidden="true" />
             </span>
             <p className="font-display text-bone mt-6 text-3xl font-extrabold uppercase sm:text-4xl">
-              Novidades a caminho
+              Nenhum produto disponível
             </p>
             <p className="text-bone-muted mt-3 max-w-md">
-              Nossos produtos estarão disponíveis aqui em breve. Volte logo!
+              Novos produtos serão publicados aqui.
             </p>
           </div>
         )}
@@ -143,11 +143,11 @@ export default async function Loja() {
           <div className="border-bone/10 bg-ink-900 mt-16 flex flex-col items-start gap-6 rounded-sm border p-6 sm:mt-24 sm:flex-row sm:items-center sm:justify-between sm:p-10">
             <div>
               <h2 className="font-display text-bone text-3xl leading-none font-extrabold uppercase sm:text-4xl">
-                Não achou o que queria?
+                Dúvidas sobre os produtos?
               </h2>
               <p className="text-bone-muted mt-3 max-w-lg">
-                Tire dúvidas sobre produtos, tamanhos e formas de pagamento
-                direto com a gente.
+                Fale com a banda pelo WhatsApp para saber sobre tamanhos,
+                pagamento e entrega.
               </p>
             </div>
             <a

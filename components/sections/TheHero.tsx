@@ -1,11 +1,10 @@
-import { IconArrowRight, IconArrowUpRight } from "@tabler/icons-react";
+import { IconArrowRight } from "@tabler/icons-react";
 import { getImageProps } from "next/image";
 import Link from "next/link";
 import type { SanityImageSource } from "@sanity/image-url";
 import { buttonStyles } from "@/components/ui/button";
-import CompassRose from "@/components/ui/CompassRose";
 import { getUpcomingShows, type SanityShow } from "@/lib/shows";
-import { CONTRATANTE_LINK, externalLinkProps } from "@/lib/site";
+import { externalLinkProps } from "@/lib/site";
 import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { HERO_QUERY, SHOWS_QUERY } from "@/sanity/lib/queries";
@@ -80,7 +79,7 @@ export default async function TheHero() {
   return (
     <section
       aria-label="Banner principal"
-      className="relative isolate flex min-h-[92svh] flex-col justify-end overflow-hidden md:min-h-svh"
+      className="relative isolate flex min-h-[88svh] flex-col justify-end overflow-hidden md:min-h-svh"
     >
       {/* Fundo */}
       <div className="bg-ink-900 absolute inset-0 -z-20">
@@ -93,121 +92,61 @@ export default async function TheHero() {
       </div>
       <div
         aria-hidden="true"
-        className="from-ink-950 via-ink-950/55 absolute inset-0 -z-10 bg-linear-to-t via-35% to-transparent"
+        className="from-ink-950 via-ink-950/45 absolute inset-0 -z-10 bg-linear-to-t via-45% to-transparent"
       />
       <div
         aria-hidden="true"
-        className="from-ink-950/80 absolute inset-0 -z-10 hidden bg-linear-to-r via-transparent to-transparent md:block"
+        className="from-ink-950/60 absolute inset-x-0 top-0 -z-10 h-32 bg-linear-to-b to-transparent"
       />
-      <div
-        aria-hidden="true"
-        className="from-ink-950/70 absolute inset-x-0 top-0 -z-10 h-40 bg-linear-to-b to-transparent"
-      />
-
-      <CompassRose className="text-brass/20 animate-spin-slow pointer-events-none absolute top-1/2 -right-[30%] -z-10 hidden w-[70vw] max-w-[1100px] -translate-y-1/2 md:block lg:-right-[18%]" />
 
       {/* Conteúdo */}
-      <div className="container-site pt-32 pb-8 md:pb-12">
-        <div className="max-w-5xl">
+      <div className="container-site pt-32 pb-14 md:pb-20">
+        <div className="max-w-3xl">
           {hero.subheading && (
-            <p className="animate-fade-up text-brass flex items-center gap-3 font-mono text-[11px] tracking-[0.3em] uppercase sm:text-xs">
-              <span className="bg-brass h-px w-10" aria-hidden="true" />
+            <p className="animate-fade-up text-bone/85 font-mono text-[11px] tracking-[0.3em] uppercase [text-shadow:0_1px_12px_rgb(0_0_0/0.6)] sm:text-xs">
               {hero.subheading}
             </p>
           )}
 
           {(hero.headingLine1 || hero.headingLine2) && (
-            <h1 className="animate-fade-up font-display text-bone mt-5 text-[clamp(3.25rem,10vw,8.75rem)] leading-[0.84] font-black tracking-tight text-balance uppercase [animation-delay:120ms] [text-shadow:0_4px_40px_rgb(0_0_0/0.5)]">
+            <h1 className="animate-fade-up font-display text-bone mt-4 text-[clamp(2.75rem,7vw,5.75rem)] leading-[0.92] font-extrabold tracking-tight text-balance uppercase [animation-delay:100ms] [text-shadow:0_2px_24px_rgb(0_0_0/0.45)]">
               {hero.headingLine1}
               {hero.headingLine2 && (
-                <span className="text-brass-gradient block pb-2 [text-shadow:none]">
-                  {hero.headingLine2}
-                </span>
+                <span className="text-brass block">{hero.headingLine2}</span>
               )}
             </h1>
           )}
 
-          <div className="animate-fade-up mt-8 flex flex-col gap-3 [animation-delay:240ms] sm:flex-row">
+          <div className="animate-fade-up mt-8 flex flex-col items-start gap-5 [animation-delay:200ms] sm:flex-row sm:items-center sm:gap-8">
             {hero.cta?.link && hero.cta?.label && (
               <Link
                 href={hero.cta.link}
                 {...externalLinkProps(hero.cta.link)}
-                className={buttonStyles({ size: "lg" })}
+                className={buttonStyles()}
               >
                 {hero.cta.label}
                 <IconArrowRight
-                  size={20}
+                  size={18}
                   stroke={2.25}
                   aria-hidden="true"
                   className="transition-transform duration-300 group-hover/btn:translate-x-1"
                 />
               </Link>
             )}
-            <Link
-              href={CONTRATANTE_LINK.href}
-              className={buttonStyles({ variant: "outline", size: "lg" })}
-            >
-              Contrate a banda
-              <IconArrowUpRight size={20} stroke={2} aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
 
-        {/* Rodapé do hero: próximo show + indicador de scroll */}
-        <div className="animate-fade-up border-bone/10 mt-12 flex items-end justify-between gap-6 border-t pt-6 [animation-delay:360ms] md:mt-16">
-          {nextShow ? (
-            <a
-              href="#agenda"
-              className="group bg-ink-950/50 border-bone/12 hover:border-brass/60 flex max-w-md min-w-0 flex-1 items-center gap-4 rounded-sm border p-2.5 pr-4 backdrop-blur-md transition-colors sm:flex-none"
-            >
-              <span className="bg-brass text-ink-950 flex w-14 shrink-0 flex-col items-center rounded-xs py-1.5">
-                <span className="font-display text-3xl leading-none font-black">
-                  {nextShow.dia}
-                </span>
-                <span className="font-mono text-[10px] font-bold tracking-widest uppercase">
-                  {nextShow.mes}
-                </span>
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="text-brass flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] uppercase">
-                  <span
-                    className="relative flex h-1.5 w-1.5"
-                    aria-hidden="true"
-                  >
-                    <span className="bg-brass absolute inset-0 animate-ping rounded-full opacity-75" />
-                    <span className="bg-brass relative h-1.5 w-1.5 rounded-full" />
-                  </span>
+            {nextShow && (
+              <a
+                href="#agenda"
+                className="group text-bone-muted hover:text-bone text-sm transition-colors"
+              >
+                <span className="text-brass mb-1 block font-mono text-[11px] tracking-[0.2em] uppercase sm:mr-2 sm:mb-0 sm:inline">
                   Próximo show
                 </span>
-                <span className="font-display text-bone mt-0.5 block truncate text-xl leading-tight font-bold uppercase">
-                  {nextShow.local}
-                </span>
-                <span className="text-bone-muted block truncate text-sm">
-                  {nextShow.cidade} · {nextShow.horario}
-                </span>
-              </span>
-              <IconArrowRight
-                size={20}
-                aria-hidden="true"
-                className="text-bone-muted group-hover:text-brass shrink-0 transition-all group-hover:translate-x-1"
-              />
-            </a>
-          ) : (
-            <span />
-          )}
-
-          <a
-            href="#agenda"
-            aria-label="Rolar para a agenda"
-            className="text-bone-muted hover:text-bone hidden shrink-0 flex-col items-center gap-3 transition-colors md:flex"
-          >
-            <span className="font-mono text-[10px] tracking-[0.3em] uppercase [writing-mode:vertical-rl]">
-              Role
-            </span>
-            <span className="bg-bone/15 relative h-14 w-px overflow-hidden">
-              <span className="bg-brass animate-scroll-line absolute inset-0" />
-            </span>
-          </a>
+                {nextShow.dia} {nextShow.mes} · {nextShow.local},{" "}
+                {nextShow.cidade}
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </section>

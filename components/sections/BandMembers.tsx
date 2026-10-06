@@ -21,11 +21,6 @@ export default async function BandMembers() {
 
   if (!members?.length) return null;
 
-  const desktopWidth =
-    members.length === 3
-      ? "lg:w-[calc((100%-3rem)/3)]"
-      : "lg:w-[calc((100%-4.5rem)/4)]";
-
   return (
     <section
       id="musicos"
@@ -35,16 +30,16 @@ export default async function BandMembers() {
       <div className="container-site">
         <SectionHeading
           id="members-title"
-          eyebrow="Quem faz o som"
+          eyebrow="Formação"
           title="Os músicos"
           className="reveal mb-10 sm:mb-14"
         />
 
-        <ul className="reveal rail sm:mx-0 sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:px-0">
+        <ul className="reveal rail sm:mx-0 sm:flex-wrap sm:justify-center sm:gap-x-6 sm:gap-y-12 sm:overflow-visible sm:px-0">
           {members.map((member) => (
             <li
               key={member._id}
-              className={`group w-[78%] sm:w-[calc((100%-1.5rem)/2)] ${desktopWidth}`}
+              className="group w-[78%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
             >
               <div className="bg-ink-850 relative aspect-4/5 overflow-hidden rounded-sm">
                 {member.image && (
@@ -52,7 +47,7 @@ export default async function BandMembers() {
                     src={urlFor(member.image).width(720).height(900).url()}
                     alt={member.imageAlt || `Foto de ${member.name}`}
                     fill
-                    sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+                    sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover object-top transition-[filter,transform] duration-700 ease-(--ease-out-expo) group-hover:scale-[1.04] group-hover:grayscale-0 [@media(hover:hover)]:grayscale-[0.85]"
                   />
                 )}
