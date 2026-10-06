@@ -1,75 +1,75 @@
-import {
-  IconBrandFacebook,
-  IconBrandInstagram,
-  IconBrandYoutube,
-  IconLink,
-} from "@tabler/icons-react";
+import { IconArrowUp, IconBrandWhatsapp, IconMail } from "@tabler/icons-react";
 import Image from "next/image";
 import Link from "next/link";
-import { sanityFetch } from "@/sanity/lib/live";
-import { CONTACT_QUERY } from "@/sanity/lib/queries";
+import SocialLinks from "@/components/ui/SocialLinks";
+import {
+  CONTRATANTE_LINK,
+  NAV_LINKS,
+  SITE_NAME,
+  type ContactData,
+} from "@/lib/site";
 import pkg from "../../package.json";
 
-interface FooterContactData {
-  socialLinks?: { platform: string; url: string }[];
+function FooterHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="text-bone-dim mb-5 font-mono text-[11px] tracking-[0.25em] uppercase">
+      {children}
+    </p>
+  );
 }
 
-const NAV_LINKS = [
-  { href: "/#agenda", label: "Agenda" },
-  { href: "/#sobre", label: "Sobre" },
-  { href: "/#contato", label: "Contato" },
-  { href: "/loja", label: "Loja" },
-  { href: "/contratante", label: "Área do Contratante" },
-];
-
-const getSocialIcon = (platform: string) => {
-  switch (platform.toLowerCase()) {
-    case "instagram":
-      return <IconBrandInstagram size={28} />;
-    case "youtube":
-      return <IconBrandYoutube size={28} />;
-    case "facebook":
-      return <IconBrandFacebook size={28} />;
-    default:
-      return <IconLink size={28} />;
-  }
-};
-
-export default async function TheFooter({ logoUrl }: { logoUrl: string }) {
-  const { data } = await sanityFetch({ query: CONTACT_QUERY });
-  const contact = data as FooterContactData | null;
+export default function TheFooter({
+  logoUrl,
+  contact,
+}: {
+  logoUrl: string;
+  contact: ContactData | null;
+}) {
+  const whatsapp = contact?.whatsappContacts?.[0];
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-(--border-gold)/30 bg-zinc-950">
-      <div className="mx-auto max-w-7xl px-6 py-12 md:py-20">
-        <div className="flex flex-col items-center gap-10 md:grid md:grid-cols-3 md:items-center md:gap-12 md:text-left">
-          <div className="flex flex-col items-center md:items-start">
+    <footer className="bg-ink-950 border-bone/8 relative overflow-hidden border-t">
+      <div className="container-site pt-16 pb-8 sm:pt-24">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
+          {/* Marca */}
+          <div className="sm:col-span-2 lg:col-span-5">
             <Link
               href="/"
-              className="flex flex-col items-center gap-4 text-center transition-transform hover:scale-105 md:flex-row md:text-left"
+              className="group inline-flex items-center gap-4"
+              aria-label={`${SITE_NAME} — página inicial`}
             >
-              {logoUrl && logoUrl !== "" && (
+              {logoUrl && (
                 <Image
                   src={logoUrl}
-                  width={112}
-                  height={112}
-                  alt="Rosa dos Ventos"
-                  className="h-24 w-24 shrink-0 object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.2)] md:h-20 md:w-20"
+                  width={128}
+                  height={128}
+                  alt=""
+                  className="h-16 w-16 object-contain transition-transform duration-700 ease-(--ease-out-expo) group-hover:rotate-45"
                 />
               )}
-              <span className="font-cinzel bg-linear-to-b from-(--gold-light) to-(--gold-dark) bg-clip-text text-2xl font-bold tracking-[0.15em] text-transparent uppercase">
-                Rosa dos Ventos
+              <span className="font-display text-bone text-3xl leading-[0.9] font-extrabold tracking-wide uppercase">
+                Rosa <span className="text-brass">dos</span>
+                <br />
+                Ventos
               </span>
             </Link>
+            <p className="text-bone-muted mt-6 max-w-sm text-base leading-relaxed">
+              Pop rock ao vivo, do primeiro acorde ao último bis. Bora fazer
+              barulho junto?
+            </p>
+            <SocialLinks links={contact?.socialLinks} className="mt-6" />
           </div>
 
-          <nav className="flex w-full justify-center">
-            <ul className="font-teko flex flex-wrap justify-center gap-x-6 gap-y-2 text-2xl tracking-widest uppercase sm:gap-x-10 md:flex-row">
-              {NAV_LINKS.map((link) => (
+          {/* Navegação */}
+          <nav aria-label="Rodapé" className="lg:col-span-3 lg:col-start-6">
+            <FooterHeading>Navegue</FooterHeading>
+            <ul className="flex flex-col gap-3">
+              {[...NAV_LINKS, CONTRATANTE_LINK].map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-zinc-400 transition-colors duration-300 hover:text-(--gold)"
+                    className="font-display text-bone/80 hover:text-brass text-xl font-bold tracking-wide uppercase transition-colors"
                   >
                     {link.label}
                   </Link>
@@ -78,38 +78,76 @@ export default async function TheFooter({ logoUrl }: { logoUrl: string }) {
             </ul>
           </nav>
 
-          <div className="flex flex-col items-center gap-4 md:items-end">
-            <p className="font-teko hidden text-xl tracking-widest text-(--gold) uppercase md:block">
-              Siga nas Redes
-            </p>
-            <div className="flex items-center justify-center gap-6">
-              {contact?.socialLinks?.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={social.platform}
-                  className="rounded-full bg-zinc-900 p-3 text-zinc-400 transition-all duration-300 hover:-translate-y-1 hover:bg-(--gold) hover:text-black hover:shadow-[0_0_20px_rgba(212,175,55,0.4)]"
-                >
-                  {getSocialIcon(social.platform)}
-                </a>
-              ))}
-            </div>
+          {/* Contato */}
+          <div className="lg:col-span-4 lg:col-start-9">
+            <FooterHeading>Fale com a gente</FooterHeading>
+            <ul className="flex flex-col gap-4">
+              {whatsapp && (
+                <li>
+                  <a
+                    href={whatsapp.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group text-bone/80 hover:text-bone flex items-center gap-3 transition-colors"
+                  >
+                    <IconBrandWhatsapp
+                      size={20}
+                      stroke={1.75}
+                      className="text-brass shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span className="decoration-brass underline-offset-4 group-hover:underline">
+                      {whatsapp.text}
+                    </span>
+                  </a>
+                </li>
+              )}
+              {contact?.emailAddress && (
+                <li>
+                  <a
+                    href={`mailto:${contact.emailAddress}`}
+                    className="group text-bone/80 hover:text-bone flex items-center gap-3 transition-colors"
+                  >
+                    <IconMail
+                      size={20}
+                      stroke={1.75}
+                      className="text-brass shrink-0"
+                      aria-hidden="true"
+                    />
+                    <span className="decoration-brass break-all underline-offset-4 group-hover:underline">
+                      {contact.emailAddress}
+                    </span>
+                  </a>
+                </li>
+              )}
+            </ul>
           </div>
         </div>
 
-        <div className="mt-12 border-t border-zinc-800/60 pt-8 md:mt-20">
-          <div className="relative flex flex-col items-center justify-center text-center">
-            <p className="text-sm tracking-wide text-zinc-500">
-              &copy; {new Date().getFullYear()} Banda Rosa dos Ventos. Todos os
-              direitos reservados.
-            </p>
+        {/* Assinatura gigante */}
+        <p
+          aria-hidden="true"
+          className="font-display text-outline text-bone/20 mt-16 text-center text-[min(13.2vw,10.5rem)] leading-[0.8] font-black tracking-tight whitespace-nowrap uppercase select-none sm:mt-24"
+        >
+          Rosa dos Ventos
+        </p>
 
-            <p className="mt-2 text-xs tracking-wide text-zinc-600 md:absolute md:top-1/2 md:right-0 md:mt-0 md:-translate-y-1/2">
-              v{pkg.version}
-            </p>
-          </div>
+        <div className="border-bone/8 text-bone-dim mt-8 flex flex-col-reverse items-center justify-between gap-4 border-t pt-6 text-xs sm:flex-row">
+          <p>
+            &copy; {year} Banda {SITE_NAME}. Todos os direitos reservados.
+            <span className="ml-3 font-mono">v{pkg.version}</span>
+          </p>
+          <a
+            href="#"
+            className="group hover:text-brass flex items-center gap-2 font-mono tracking-[0.2em] uppercase transition-colors"
+          >
+            Voltar ao topo
+            <IconArrowUp
+              size={14}
+              aria-hidden="true"
+              className="transition-transform group-hover:-translate-y-0.5"
+            />
+          </a>
         </div>
       </div>
     </footer>

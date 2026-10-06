@@ -1,200 +1,227 @@
 "use client";
 
 import {
-  IconCalendar,
+  IconCalendarPlus,
+  IconCheck,
   IconClock,
   IconMapPin,
+  IconShare2,
   IconTicket,
   IconX,
 } from "@tabler/icons-react";
-import { useCallback, useEffect, useId, useRef } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import { buttonStyles } from "@/components/ui/button";
+import { googleCalendarUrl, type FormattedShow } from "@/lib/shows";
 
 interface ShowModalProps {
-  show: {
-    _id: string;
-    local: string;
-    cidade: string;
-    link?: string;
-    linkLocalizacao?: string;
-    data: string;
-    dia: string;
-    mes: string;
-    ano: string;
-    horario: string;
-    diaSemana: string;
-  };
+  show: FormattedShow;
+  isNext?: boolean;
   onClose: () => void;
 }
 
-export default function ShowModal({ show, onClose }: ShowModalProps) {
-  const titleId = useId();
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
+function InfoRow({
+  icon,
+  label,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex items-start gap-4 py-4">
+      <span className="bg-ink-800 text-brass flex h-10 w-10 shrink-0 items-center justify-center rounded-full">
+        {icon}
+      </span>
+      <div className="min-w-0">
+        <p className="text-bone-dim font-mono text-[10px] tracking-[0.25em] uppercase">
+          {label}
+        </p>
+        <div className="text-bone mt-1 text-[15px]">{children}</div>
+      </div>
+    </div>
+  );
+}
 
-  const handleClose = useCallback(() => onClose(), [onClose]);
+export default function ShowModal({ show, isNext, onClose }: ShowModalProps) {
+  const titleId = useId();
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const [shared, setShared] = useState(false);
 
   useEffect(() => {
-    closeBtnRef.current?.focus();
+    const dialog = dialogRef.current;
+    if (!dialog) return;
 
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") handleClose();
-    };
-    document.addEventListener("keydown", onKey);
+    dialog.showModal();
     document.body.style.overflow = "hidden";
 
     return () => {
-      document.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
+      if (dialog.open) dialog.close();
     };
-  }, [handleClose]);
+  }, []);
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/#agenda`;
+    const text = `Rosa dos Ventos ao vivo — ${show.local}, ${show.cidade} · ${show.dia}/${show.mes}`;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Rosa dos Ventos", text, url });
+      } else {
+        await navigator.clipboard.writeText(`${text}\n${url}`);
+        setShared(true);
+        setTimeout(() => setShared(false), 2500);
+      }
+    } catch {
+      // usuário cancelou o compartilhamento
+    }
+  };
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-6"
-      role="dialog"
-      aria-modal="true"
+    <dialog
+      ref={dialogRef}
       aria-labelledby={titleId}
+      onClose={onClose}
+      onClick={(e) => {
+        if (e.target === dialogRef.current) onClose();
+      }}
+      className="text-bone backdrop:bg-ink-950/80 m-0 mt-auto max-h-[92svh] w-full max-w-full bg-transparent p-0 backdrop:backdrop-blur-sm sm:m-auto sm:max-w-lg"
     >
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/85 backdrop-blur-sm"
-        onClick={handleClose}
-        aria-hidden="true"
-      />
-
-      {/* Modal */}
-      <div className="relative z-10 w-full rounded-t-2xl border border-(--border-gold) bg-(--surface) p-6 shadow-2xl sm:max-w-xl sm:rounded-2xl sm:p-8 md:p-10">
-        {/* Drag handle — mobile only */}
+      <div className="animate-sheet-up bg-ink-900 border-bone/10 relative overflow-y-auto rounded-t-2xl border pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:rounded-md">
+        {/* Alça do bottom-sheet (mobile) */}
         <div
-          className="mx-auto mb-4 h-1 w-10 rounded-full bg-(--border) sm:hidden"
+          className="bg-bone/20 mx-auto mt-3 h-1 w-10 rounded-full sm:hidden"
           aria-hidden="true"
         />
 
-        {/* Close Button */}
         <button
-          ref={closeBtnRef}
-          onClick={handleClose}
-          className="absolute top-5 right-5 rounded-full p-1 text-(--text-muted) transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-(--gold)"
-          aria-label="Fechar modal"
+          type="button"
+          onClick={onClose}
+          aria-label="Fechar detalhes do show"
+          className="text-bone-muted hover:bg-ink-800 hover:text-bone absolute top-3 right-3 flex h-10 w-10 items-center justify-center rounded-full transition-colors sm:top-4 sm:right-4"
         >
-          <IconX size={22} />
+          <IconX size={20} />
         </button>
 
-        {/* Title */}
-        <div className="mb-6 pr-8">
-          <p className="font-teko mb-1 text-sm tracking-[0.2em] text-(--gold) uppercase sm:text-base">
-            Detalhes do Evento
-          </p>
-          <h2
-            id={titleId}
-            className="font-cinzel text-xl leading-snug font-bold text-white sm:text-3xl md:text-4xl"
-          >
-            {show.local}
-          </h2>
+        {/* Cabeçalho tipo ingresso */}
+        <div className="border-bone/10 flex items-end gap-5 border-b border-dashed px-6 pt-5 pb-6 sm:px-8 sm:pt-8">
+          <div className="bg-brass text-ink-950 flex w-20 shrink-0 flex-col items-center rounded-sm py-2">
+            <span className="font-display text-5xl leading-none font-black">
+              {show.dia}
+            </span>
+            <span className="font-mono text-[11px] font-bold tracking-widest uppercase">
+              {show.mes} {show.ano}
+            </span>
+          </div>
+          <div className="min-w-0 pr-8">
+            <p className="text-brass flex items-center gap-2 font-mono text-[10px] tracking-[0.25em] uppercase">
+              {isNext ? "Próximo show" : "Detalhes do show"}
+            </p>
+            <h2
+              id={titleId}
+              className="font-display mt-1 text-3xl leading-[0.95] font-extrabold tracking-tight text-balance uppercase sm:text-4xl"
+            >
+              {show.local}
+            </h2>
+          </div>
         </div>
 
-        {/* Info Grid */}
-        <div className="mb-7 flex flex-col gap-4 border-y border-(--border) py-5 sm:mb-8 sm:gap-5 sm:py-6">
-          <div className="flex items-start gap-4 text-(--text-secondary)">
-            <IconMapPin
-              size={20}
-              className="mt-0.5 shrink-0 text-(--gold)"
-              aria-hidden="true"
-            />
-            <div className="flex min-w-0 flex-col">
-              <span className="font-teko text-xs tracking-wider text-(--text-muted) uppercase sm:text-sm">
-                Localidade
-              </span>
-              {show.linkLocalizacao ? (
+        <div className="divide-bone/8 divide-y px-6 sm:px-8">
+          <InfoRow
+            icon={<IconMapPin size={18} aria-hidden="true" />}
+            label="Local"
+          >
+            {show.linkLocalizacao ? (
+              <a
+                href={show.linkLocalizacao}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="decoration-brass/60 hover:text-brass underline underline-offset-4 transition-colors"
+              >
+                {show.cidade}
+              </a>
+            ) : (
+              show.cidade
+            )}
+          </InfoRow>
+          <InfoRow
+            icon={<IconClock size={18} aria-hidden="true" />}
+            label="Data e horário"
+          >
+            {show.diaSemana}, {show.dia} de {show.mes} de {show.ano}
+            <span className="text-bone-muted"> · {show.horario}</span>
+          </InfoRow>
+        </div>
+
+        <div className="flex flex-col gap-3 px-6 pt-4 sm:px-8">
+          {(show.link || show.linkLocalizacao) && (
+            <div className="flex flex-col gap-3 sm:flex-row">
+              {show.link && (
+                <a
+                  href={show.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={buttonStyles({ className: "sm:flex-1" })}
+                >
+                  <IconTicket size={20} aria-hidden="true" />
+                  Garantir ingresso
+                </a>
+              )}
+              {show.linkLocalizacao && (
                 <a
                   href={show.linkLocalizacao}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-roboto text-sm text-white transition-colors hover:text-(--gold) hover:underline sm:text-base"
+                  className={buttonStyles({
+                    variant: "outline",
+                    className: "sm:flex-1",
+                  })}
                 >
-                  {show.cidade}{" "}
-                  <span className="text-xs font-normal text-(--gold) opacity-80">
-                    (Toque para abrir o mapa)
-                  </span>
+                  <IconMapPin size={20} aria-hidden="true" />
+                  Como chegar
                 </a>
-              ) : (
-                <span className="font-roboto text-sm text-white sm:text-base">
-                  {show.cidade}
-                </span>
               )}
             </div>
-          </div>
-
-          <div className="flex items-start gap-4 text-(--text-secondary)">
-            <IconCalendar
-              size={20}
-              className="mt-0.5 shrink-0 text-(--gold)"
-              aria-hidden="true"
-            />
-            <div className="flex flex-col">
-              <span className="font-teko text-xs tracking-wider text-(--text-muted) uppercase sm:text-sm">
-                Data
-              </span>
-              <span className="font-roboto text-sm text-white sm:text-base">
-                {show.diaSemana}, {show.dia} de {show.mes} de {show.ano}
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-4 text-(--text-secondary)">
-            <IconClock
-              size={20}
-              className="mt-0.5 shrink-0 text-(--gold)"
-              aria-hidden="true"
-            />
-            <div className="flex flex-col">
-              <span className="font-teko text-xs tracking-wider text-(--text-muted) uppercase sm:text-sm">
-                Horário
-              </span>
-              <span className="font-roboto text-sm text-white sm:text-base">
-                {show.horario}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Footer Actions */}
-        <div className="flex flex-col gap-3 sm:flex-row">
-          {show.link && (
-            <a
-              href={show.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-teko flex flex-1 items-center justify-center gap-2 border border-(--gold) bg-(--gold) px-6 py-3 text-lg tracking-wider text-black uppercase transition-all hover:bg-(--gold-light) hover:shadow-[0_0_20px_rgba(201,162,39,0.25)] sm:text-xl"
-            >
-              <IconTicket size={20} aria-hidden="true" />
-              Garantir Ingressos
-            </a>
           )}
 
-          {show.linkLocalizacao && (
+          <div className="grid grid-cols-2 gap-3">
             <a
-              href={show.linkLocalizacao}
+              href={googleCalendarUrl(show)}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-teko flex flex-1 items-center justify-center gap-2 border border-(--border) bg-(--surface-2) px-6 py-3 text-lg tracking-wider text-(--text-secondary) uppercase transition-all hover:border-(--border-gold) hover:text-white sm:text-xl"
+              className={buttonStyles({
+                variant: "ghost",
+                size: "sm",
+                className:
+                  "border-bone/10 hover:border-bone/25 border px-2 max-sm:text-sm",
+              })}
             >
-              <IconMapPin
-                size={20}
-                className="text-(--gold)"
-                aria-hidden="true"
-              />
-              Como Chegar
+              <IconCalendarPlus size={18} aria-hidden="true" />
+              Salvar na agenda
             </a>
-          )}
-
-          <button
-            onClick={handleClose}
-            className="font-teko flex flex-1 items-center justify-center border border-(--border) px-6 py-3 text-lg tracking-wider text-(--text-muted) uppercase transition-colors hover:border-(--border-gold) hover:text-white sm:text-xl"
-          >
-            Fechar
-          </button>
+            <button
+              type="button"
+              onClick={handleShare}
+              className={buttonStyles({
+                variant: "ghost",
+                size: "sm",
+                className:
+                  "border-bone/10 hover:border-bone/25 border px-2 max-sm:text-sm",
+              })}
+            >
+              {shared ? (
+                <IconCheck size={18} aria-hidden="true" />
+              ) : (
+                <IconShare2 size={18} aria-hidden="true" />
+              )}
+              <span aria-live="polite">
+                {shared ? "Link copiado" : "Compartilhar"}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }

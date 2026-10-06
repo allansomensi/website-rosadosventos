@@ -1,19 +1,27 @@
 import {
-  IconDownload,
-  IconMail,
+  IconArrowUpRight,
   IconBrandWhatsapp,
-  IconPlayerPlayFilled,
-  IconExternalLink,
+  IconFileTypePdf,
+  IconMail,
+  IconPhoto,
 } from "@tabler/icons-react";
-import Image from "next/image";
+import type { Metadata } from "next";
+import ContactCard from "@/components/common/ContactCard";
+import VideoGallery, { type Video } from "@/components/common/VideoGallery";
+import { buttonStyles } from "@/components/ui/button";
+import CompassRose from "@/components/ui/CompassRose";
+import PageHero from "@/components/ui/PageHero";
+import SectionHeading, { Eyebrow } from "@/components/ui/SectionHeading";
+import { whatsappLink } from "@/lib/loja";
+import type { ContactData } from "@/lib/site";
 import { sanityFetch } from "@/sanity/lib/live";
 import { AREA_CONTRATANTE_QUERY, CONTACT_QUERY } from "@/sanity/lib/queries";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Área do Contratante",
   description:
     "Material oficial da banda Rosa dos Ventos exclusivo para contratantes, produtores e donos de casas de show.",
+  alternates: { canonical: "/contratante" },
   openGraph: {
     title: "Área do Contratante | Rosa dos Ventos",
     description:
@@ -22,183 +30,213 @@ export const metadata: Metadata = {
   },
 };
 
-interface VideoData {
-  title?: string;
-  youtubeUrl?: string;
-  thumbnailUrl?: string;
-}
-
 interface AreaContratanteData {
   heading?: string;
   subheading?: string;
   description?: string;
   portfolioUrl?: string;
   driveUrl?: string;
-  videos?: VideoData[];
+  videos?: Video[];
 }
 
-interface ContatoData {
-  emailAddress?: string;
-  whatsappContacts?: {
-    text: string;
-    url: string;
-  }[];
+function KitCard({
+  href,
+  icon,
+  label,
+  title,
+  text,
+  cta,
+  primary,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  label: string;
+  title: string;
+  text: string;
+  cta: string;
+  primary?: boolean;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`group relative flex flex-col overflow-hidden rounded-sm border p-6 transition-colors duration-300 sm:p-8 ${
+        primary
+          ? "border-brass/40 from-brass/15 hover:border-brass bg-linear-to-br to-transparent"
+          : "border-bone/10 bg-ink-900/70 hover:border-bone/30"
+      }`}
+    >
+      <div className="flex items-start justify-between gap-4">
+        <span
+          className={`flex h-14 w-14 items-center justify-center rounded-full ${
+            primary ? "bg-brass text-ink-950" : "bg-ink-800 text-brass"
+          }`}
+        >
+          {icon}
+        </span>
+        <IconArrowUpRight
+          size={24}
+          aria-hidden="true"
+          className="text-bone-dim group-hover:text-brass transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+        />
+      </div>
+      <p className="text-brass mt-8 font-mono text-[10px] tracking-[0.25em] uppercase">
+        {label}
+      </p>
+      <h2 className="font-display text-bone mt-1 text-3xl leading-none font-extrabold uppercase sm:text-4xl">
+        {title}
+      </h2>
+      <p className="text-bone-muted mt-3 text-sm leading-relaxed sm:text-base">
+        {text}
+      </p>
+      <span className="font-display text-bone group-hover:text-brass mt-6 text-lg font-bold tracking-wider uppercase transition-colors">
+        {cta} →
+      </span>
+    </a>
+  );
 }
 
 export default async function Contratante() {
-  const { data: contratanteData } = await sanityFetch({
-    query: AREA_CONTRATANTE_QUERY,
-  });
+  const [{ data: contratanteData }, { data: contatoData }] = await Promise.all([
+    sanityFetch({ query: AREA_CONTRATANTE_QUERY }),
+    sanityFetch({ query: CONTACT_QUERY }),
+  ]);
+
   const contratante = contratanteData as AreaContratanteData | null;
-
-  const { data: contatoData } = await sanityFetch({ query: CONTACT_QUERY });
-  const contato = contatoData as ContatoData | null;
-
+  const contato = contatoData as ContactData | null;
   const whatsapp = contato?.whatsappContacts?.[0];
+  const videos = contratante?.videos?.filter((v) => v.youtubeUrl) ?? [];
 
   return (
-    <main className="min-h-screen bg-zinc-950 pt-32 pb-24">
-      <div className="mx-auto max-w-5xl px-6">
-        {/* Header Section */}
-        <div className="relative z-10 mb-20 text-center sm:text-left">
-          <p className="font-teko mb-3 text-xl tracking-[0.3em] text-(--gold) uppercase">
-            {contratante?.subheading || "Material Oficial"}
-          </p>
-          <h1 className="font-cinzel text-5xl font-bold text-white drop-shadow-lg sm:text-6xl md:text-7xl">
-            {contratante?.heading || "Área do Contratante"}
-          </h1>
-          <div className="mx-auto mt-8 h-px w-24 bg-linear-to-r from-(--gold) to-transparent sm:mx-0" />
-          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-zinc-400">
-            {contratante?.description ||
-              "Aqui você encontra todo o material necessário para a contratação e divulgação da Rosa dos Ventos."}
-          </p>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="mb-24 flex flex-col gap-6 sm:flex-row">
-          {contratante?.portfolioUrl && (
-            <a
-              href={contratante.portfolioUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-teko group flex items-center justify-center gap-3 border border-(--gold) bg-(--gold) px-10 py-4 text-2xl tracking-wider text-black uppercase transition-all duration-300 hover:bg-transparent hover:text-(--gold)"
-            >
-              <IconDownload
-                size={24}
-                className="transition-transform group-hover:-translate-y-1"
+    <>
+      <PageHero
+        breadcrumb="Contratante"
+        eyebrow={contratante?.subheading || "Material oficial"}
+        title={contratante?.heading || "Área do Contratante"}
+        description={
+          contratante?.description ||
+          "Aqui você encontra todo o material necessário para a contratação e divulgação da Rosa dos Ventos."
+        }
+      >
+        {(contratante?.portfolioUrl || contratante?.driveUrl) && (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {contratante?.portfolioUrl && (
+              <KitCard
+                primary
+                href={contratante.portfolioUrl}
+                icon={
+                  <IconFileTypePdf size={28} stroke={1.5} aria-hidden="true" />
+                }
+                label="Press kit"
+                title="Portfólio completo"
+                text="Apresentação da banda em PDF, pronta para enviar à sua equipe."
+                cta="Baixar portfólio"
               />
-              Portfólio (PDF)
-            </a>
-          )}
-
-          {contratante?.driveUrl && (
-            <a
-              href={contratante.driveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-teko group flex items-center justify-center gap-3 border border-zinc-700 bg-zinc-900/50 px-10 py-4 text-2xl tracking-wider text-zinc-300 uppercase transition-all duration-300 hover:border-(--gold) hover:text-white"
-            >
-              <IconExternalLink
-                size={24}
-                className="text-(--gold) transition-transform group-hover:scale-110"
-              />
-              Fotos e Logos (Drive)
-            </a>
-          )}
-        </div>
-
-        {/* Vídeos Section */}
-        {contratante?.videos && contratante.videos.length > 0 && (
-          <section className="mb-24">
-            <div className="mb-10 flex items-center gap-4">
-              <h2 className="font-cinzel text-4xl font-bold text-white">
-                Material em Vídeo
-              </h2>
-              <div className="h-px flex-1 bg-linear-to-r from-zinc-800 to-transparent" />
-            </div>
-
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-              {contratante.videos.map((video, index) => (
-                <a
-                  key={index}
-                  href={video.youtubeUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  aria-label={`Assistir ao vídeo: ${video.title}`}
-                  className="group relative block aspect-video cursor-pointer overflow-hidden rounded-2xl border border-zinc-800/80 bg-zinc-900 transition-colors duration-300 hover:border-(--gold)/30"
-                >
-                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/30 transition-colors duration-300 group-hover:bg-transparent">
-                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-(--gold) text-black shadow-(--gold)/10 shadow-lg transition-all duration-300 ease-out group-hover:scale-110 group-hover:shadow-(--gold)/40">
-                      <IconPlayerPlayFilled
-                        size={32}
-                        aria-hidden="true"
-                        className="ml-1"
-                      />
-                    </div>
-                  </div>
-
-                  {video.thumbnailUrl && video.thumbnailUrl !== "" && (
-                    <Image
-                      src={video.thumbnailUrl}
-                      alt={video.title || "Vídeo Rosa dos Ventos"}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover opacity-85 transition-opacity duration-300 ease-in-out group-hover:opacity-100"
-                    />
-                  )}
-
-                  <div className="absolute right-0 bottom-0 left-0 z-20 bg-linear-to-t from-black/90 via-black/50 to-transparent p-6 transition-colors duration-300 group-hover:from-black/70">
-                    <h3 className="font-teko text-2xl tracking-wide text-white transition-transform duration-300 ease-out group-hover:-translate-y-1">
-                      {video.title}
-                    </h3>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Contato Rápido */}
-        <section className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-6 backdrop-blur-sm sm:p-10">
-          <h2 className="font-cinzel mb-8 text-center text-3xl font-bold text-white sm:text-left">
-            Pronto para fechar negócio?
-          </h2>
-          <div className="flex flex-col items-center justify-center gap-8 sm:flex-row sm:justify-start sm:gap-12">
-            {whatsapp && (
-              <a
-                href={whatsapp.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-4 text-zinc-400 transition-colors hover:text-white"
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-zinc-800 transition-colors group-hover:bg-[#25D366]">
-                  <IconBrandWhatsapp size={28} className="text-white" />
-                </div>
-                <span className="font-teko text-3xl tracking-widest">
-                  {whatsapp.text}
-                </span>
-              </a>
             )}
-
-            {contato?.emailAddress && (
-              <a
-                href={`mailto:${contato.emailAddress}`}
-                className="group flex items-center gap-4 text-zinc-400 transition-colors hover:text-white"
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-zinc-800 transition-colors group-hover:bg-(--gold)">
-                  <IconMail
-                    size={28}
-                    className="text-white group-hover:text-black"
-                  />
-                </div>
-                <span className="text-lg break-all sm:text-xl">
-                  {contato.emailAddress}
-                </span>
-              </a>
+            {contratante?.driveUrl && (
+              <KitCard
+                href={contratante.driveUrl}
+                icon={<IconPhoto size={28} stroke={1.5} aria-hidden="true" />}
+                label="Google Drive"
+                title="Fotos e logos"
+                text="Imagens em alta resolução e logotipos para divulgação do evento."
+                cta="Abrir pasta"
+              />
             )}
           </div>
+        )}
+      </PageHero>
+
+      {videos.length > 0 && (
+        <section
+          aria-labelledby="videos-title"
+          className="container-site py-16 sm:py-24"
+        >
+          <SectionHeading
+            id="videos-title"
+            eyebrow="Ao vivo"
+            title="Material em vídeo"
+            description="Veja a banda em ação — repertório, palco e energia do público."
+            className="reveal mb-10 sm:mb-14"
+          />
+          <div className="reveal">
+            <VideoGallery videos={videos} />
+          </div>
         </section>
-      </div>
-    </main>
+      )}
+
+      {(whatsapp || contato?.emailAddress) && (
+        <section
+          aria-labelledby="fechar-title"
+          className="container-site pb-20 sm:pb-28"
+        >
+          <div className="reveal border-bone/10 bg-ink-900 relative isolate grid grid-cols-1 gap-10 overflow-hidden rounded-sm border p-6 sm:p-10 lg:grid-cols-2 lg:items-center lg:p-14">
+            <CompassRose className="text-brass/8 absolute -right-32 -bottom-32 -z-10 w-[480px]" />
+            <div>
+              <Eyebrow>Orçamentos</Eyebrow>
+              <h2
+                id="fechar-title"
+                className="font-display text-bone mt-4 text-[clamp(2.5rem,7vw,4.5rem)] leading-[0.9] font-extrabold uppercase"
+              >
+                Pronto para fechar negócio?
+              </h2>
+              <p className="text-bone-muted mt-4 max-w-md">
+                Conte a data, a cidade e o tipo de evento. A gente monta a
+                proposta ideal para o seu palco.
+              </p>
+              {whatsapp && (
+                <a
+                  href={whatsappLink(
+                    whatsapp.url,
+                    "Olá! Vim pela Área do Contratante e gostaria de um orçamento para show da Rosa dos Ventos.",
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={buttonStyles({
+                    variant: "whatsapp",
+                    size: "lg",
+                    className: "mt-8 w-full sm:w-auto",
+                  })}
+                >
+                  <IconBrandWhatsapp size={22} aria-hidden="true" />
+                  Pedir orçamento
+                </a>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-3">
+              {contato?.whatsappContacts?.map((whats) => (
+                <ContactCard
+                  key={whats.url}
+                  icon={
+                    <IconBrandWhatsapp
+                      size={26}
+                      stroke={1.75}
+                      aria-hidden="true"
+                    />
+                  }
+                  label={contato.whatsappTitle ?? "WhatsApp"}
+                  value={whats.text}
+                  href={whats.url}
+                  tone="whatsapp"
+                  external
+                />
+              ))}
+              {contato?.emailAddress && (
+                <ContactCard
+                  icon={<IconMail size={26} stroke={1.75} aria-hidden="true" />}
+                  label={contato.emailTitle ?? "E-mail"}
+                  value={contato.emailAddress}
+                  href={`mailto:${contato.emailAddress}`}
+                  copyValue={contato.emailAddress}
+                  valueStyle="text"
+                />
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+    </>
   );
 }

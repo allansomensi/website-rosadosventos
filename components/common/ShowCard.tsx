@@ -1,121 +1,97 @@
 "use client";
 
-import { IconChevronRight, IconMapPin, IconTicket } from "@tabler/icons-react";
+import { IconPlus, IconTicket } from "@tabler/icons-react";
 import { useState } from "react";
+import { buttonStyles } from "@/components/ui/button";
+import type { FormattedShow } from "@/lib/shows";
 import ShowModal from "./ShowModal";
 
-interface ShowCardProps {
-  show: {
-    _id: string;
-    local: string;
-    cidade: string;
-    link?: string;
-    linkLocalizacao?: string;
-    data: string;
-    dia: string;
-    mes: string;
-    ano: string;
-    horario: string;
-    diaSemana: string;
-  };
-}
-
-export default function ShowCard({ show }: ShowCardProps) {
+export default function ShowCard({
+  show,
+  isNext = false,
+}: {
+  show: FormattedShow;
+  isNext?: boolean;
+}) {
   const [open, setOpen] = useState(false);
 
   return (
-    <>
-      <article className="group relative w-full border-b border-(--border) py-5 text-left transition-all duration-200 hover:border-(--border-gold) hover:bg-(--surface-2) sm:py-6">
-        <button
-          onClick={() => setOpen(true)}
-          className="absolute inset-0 z-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-(--gold) focus-visible:ring-inset"
-          aria-label={`Ver detalhes do show em ${show.local}, ${show.dia} de ${show.mes}`}
-        />
+    <li className="group border-bone/10 relative border-b">
+      {/* Linha inteira clicável — abre os detalhes */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-haspopup="dialog"
+        aria-label={`Ver detalhes do show em ${show.local}, ${show.cidade}, ${show.diaSemana} ${show.dia} de ${show.mes}`}
+        className="focus-visible:ring-brass absolute inset-0 z-0 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-inset"
+      />
 
-        <div className="pointer-events-none relative z-10 flex items-center gap-3 px-1 sm:gap-6 sm:px-0">
-          <div className="w-12 shrink-0 text-center sm:w-14">
-            <span className="font-teko block text-3xl leading-none font-bold text-(--gold) sm:text-5xl">
-              {show.dia}
-            </span>
-            <span className="font-teko block text-sm text-white uppercase sm:text-lg">
-              {show.mes}
-            </span>
-          </div>
+      <span
+        aria-hidden="true"
+        className="bg-brass absolute inset-y-0 left-0 w-0.5 origin-top scale-y-0 transition-transform duration-500 ease-(--ease-out-expo) group-hover:scale-y-100"
+      />
 
-          <div
-            className="hidden h-12 w-px shrink-0 bg-(--border) sm:block"
-            aria-hidden="true"
-          />
-
-          <div className="min-w-0 flex-1">
-            <p className="font-teko mb-0.5 text-xs tracking-[0.15em] text-(--gold) uppercase sm:text-sm sm:tracking-[0.2em]">
-              {show.diaSemana} &bull; {show.horario}
-            </p>
-            <h3 className="font-cinzel line-clamp-1 text-base font-bold text-white sm:text-xl md:text-2xl">
-              {show.local}
-            </h3>
-            <p className="mt-0.5 flex items-center gap-1 text-xs text-(--text-muted) sm:mt-1 sm:gap-1.5 sm:text-sm">
-              <IconMapPin
-                size={13}
-                className="shrink-0 text-(--gold) sm:hidden"
-                aria-hidden="true"
-              />
-              <IconMapPin
-                size={15}
-                className="hidden shrink-0 text-(--gold) sm:block"
-                aria-hidden="true"
-              />
-              {show.linkLocalizacao ? (
-                <a
-                  href={show.linkLocalizacao}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="pointer-events-auto line-clamp-1 transition-colors hover:text-(--gold) hover:underline focus-visible:outline-(--gold)"
-                >
-                  {show.cidade}
-                  <span className="ml-1 text-xs text-(--gold) opacity-70">
-                    (Mapa)
-                  </span>
-                </a>
-              ) : (
-                <span className="line-clamp-1">{show.cidade}</span>
-              )}
-            </p>
-          </div>
-
-          <div className="pointer-events-auto flex shrink-0 items-center gap-2 sm:gap-4">
-            {show.link && (
-              <>
-                <a
-                  href={show.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-teko flex items-center gap-1.5 border border-(--gold) bg-(--gold)/5 px-3 py-2 text-sm tracking-wider text-(--gold) uppercase transition-all duration-300 hover:bg-(--gold) hover:text-black hover:shadow-[0_0_20px_rgba(201,162,39,0.3)] focus-visible:outline-(--gold) sm:hidden"
-                  aria-label="Comprar ingressos"
-                >
-                  <IconTicket size={15} aria-hidden="true" />
-                </a>
-                <a
-                  href={show.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-teko hidden items-center gap-2 border border-(--gold) bg-(--gold)/5 px-5 py-2.5 text-base tracking-widest text-(--gold) uppercase transition-all duration-300 hover:bg-(--gold) hover:text-black hover:shadow-[0_0_20px_rgba(201,162,39,0.3)] focus-visible:outline-(--gold) sm:flex md:text-lg"
-                >
-                  <IconTicket size={18} aria-hidden="true" />
-                  Ingressos
-                </a>
-              </>
-            )}
-            <IconChevronRight
-              size={20}
-              className="text-(--text-muted) transition-all group-hover:translate-x-0.5 group-hover:text-(--gold)"
-              aria-hidden="true"
-            />
-          </div>
+      <div className="group-hover:bg-ink-850/70 pointer-events-none relative grid grid-cols-[auto_1fr_auto] items-center gap-4 py-5 transition-colors duration-300 sm:gap-8 sm:px-5 sm:py-7">
+        {/* Data */}
+        <div className="flex w-14 flex-col items-center sm:w-20">
+          <span className="font-display text-bone group-hover:text-brass text-[2.75rem] leading-[0.85] font-black transition-colors sm:text-6xl">
+            {show.dia}
+          </span>
+          <span className="text-brass mt-1 font-mono text-[10px] font-bold tracking-[0.2em] uppercase sm:text-xs">
+            {show.mes}
+          </span>
         </div>
-      </article>
 
-      {open && <ShowModal show={show} onClose={() => setOpen(false)} />}
-    </>
+        {/* Info */}
+        <div className="min-w-0">
+          <p className="text-bone-dim flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] tracking-[0.18em] uppercase sm:text-[11px]">
+            {isNext && (
+              <span className="bg-brass/15 text-brass rounded-full px-2 py-0.5">
+                Próximo
+              </span>
+            )}
+            <span>
+              {show.diaSemana} · {show.horario}
+            </span>
+          </p>
+          <h3 className="font-display text-bone mt-1 line-clamp-2 text-2xl leading-tight font-extrabold tracking-tight uppercase sm:text-4xl">
+            {show.local}
+          </h3>
+          <p className="text-bone-muted truncate text-sm sm:text-base">
+            {show.cidade}
+          </p>
+        </div>
+
+        {/* Ações */}
+        <div className="flex items-center gap-3">
+          {show.link && (
+            <a
+              href={show.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Comprar ingresso para ${show.local}`}
+              className={buttonStyles({
+                size: "sm",
+                className:
+                  "pointer-events-auto relative z-10 max-sm:w-10 max-sm:px-0",
+              })}
+            >
+              <IconTicket size={20} aria-hidden="true" className="shrink-0" />
+              <span className="hidden sm:inline">Ingressos</span>
+            </a>
+          )}
+          <span
+            aria-hidden="true"
+            className="border-bone/15 text-bone-muted group-hover:border-brass group-hover:text-brass hidden h-10 w-10 items-center justify-center rounded-full border transition-all duration-300 group-hover:rotate-90 sm:flex"
+          >
+            <IconPlus size={18} />
+          </span>
+        </div>
+      </div>
+
+      {open && (
+        <ShowModal show={show} isNext={isNext} onClose={() => setOpen(false)} />
+      )}
+    </li>
   );
 }

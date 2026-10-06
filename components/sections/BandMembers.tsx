@@ -1,9 +1,10 @@
 import Image from "next/image";
+import type { SanityImageSource } from "@sanity/image-url";
+import ExpandableText from "@/components/common/ExpandableText";
+import SectionHeading from "@/components/ui/SectionHeading";
+import { urlFor } from "@/sanity/lib/image";
 import { sanityFetch } from "@/sanity/lib/live";
 import { BAND_MEMBERS_QUERY } from "@/sanity/lib/queries";
-import { urlFor } from "@/sanity/lib/image";
-import { SanityImageSource } from "@sanity/image-url";
-import ExpandableText from "@/components/common/ExpandableText";
 
 interface BandMember {
   _id: string;
@@ -16,71 +17,71 @@ interface BandMember {
 
 export default async function BandMembers() {
   const { data } = await sanityFetch({ query: BAND_MEMBERS_QUERY });
-  const members = data as BandMember[];
+  const members = data as BandMember[] | null;
 
-  if (!members || members.length === 0) {
-    return null;
-  }
+  if (!members?.length) return null;
+
+  const desktopWidth =
+    members.length === 3
+      ? "lg:w-[calc((100%-3rem)/3)]"
+      : "lg:w-[calc((100%-4.5rem)/4)]";
 
   return (
     <section
       id="musicos"
-      className="relative overflow-hidden bg-zinc-950 py-24 md:py-32"
+      aria-labelledby="members-title"
+      className="bg-ink-950 relative overflow-hidden pt-4 pb-20 sm:pb-28 lg:pb-36"
     >
-      <div className="pointer-events-none absolute bottom-0 left-1/2 h-200 w-200 -translate-x-1/2 translate-y-1/2 rounded-full bg-(--gold)/5 blur-[120px]" />
+      <div className="container-site">
+        <SectionHeading
+          id="members-title"
+          eyebrow="Quem faz o som"
+          title="Os músicos"
+          className="reveal mb-10 sm:mb-14"
+        />
 
-      <div className="relative z-10 container mx-auto max-w-7xl px-6">
-        <div className="mb-24 text-center">
-          <p className="font-teko mb-3 text-xl tracking-[0.25em] text-(--gold) uppercase opacity-90">
-            Quem Somos
-          </p>
-          <h2 className="font-cinzel text-4xl font-bold tracking-wide text-white md:text-5xl">
-            Os Músicos
-          </h2>
-          <div className="mx-auto mt-6 h-px w-24 bg-linear-to-r from-transparent via-(--gold)/50 to-transparent" />
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-12 lg:gap-16">
+        <ul className="reveal rail sm:mx-0 sm:flex-wrap sm:justify-center sm:gap-6 sm:overflow-visible sm:px-0">
           {members.map((member) => (
-            <div
+            <li
               key={member._id}
-              className="group relative flex w-full max-w-[320px] flex-col items-center transition-transform duration-500 ease-out hover:-translate-y-2"
+              className={`group w-[78%] sm:w-[calc((100%-1.5rem)/2)] ${desktopWidth}`}
             >
-              <div className="relative h-105 w-full overflow-hidden rounded-4xl border border-white/5 bg-zinc-900/20 backdrop-blur-md transition-all duration-700 ease-out group-hover:border-(--gold)/40 group-hover:bg-zinc-900/40 group-hover:shadow-(--gold)/10 group-hover:shadow-[0_0_40px_-10px_rgba(0,0,0,0.5)]">
-                <div className="absolute inset-0">
-                  <div className="h-full w-full origin-bottom transition-transform duration-300 ease-out will-change-transform group-hover:scale-105">
-                    {member.image && (
-                      <Image
-                        src={urlFor(member.image).width(400).height(500).url()}
-                        alt={member.imageAlt || `Foto de ${member.name}`}
-                        width={400}
-                        height={500}
-                        className="h-full w-full object-cover object-top drop-shadow-2xl"
-                      />
-                    )}
-                  </div>
+              <div className="bg-ink-850 relative aspect-4/5 overflow-hidden rounded-sm">
+                {member.image && (
+                  <Image
+                    src={urlFor(member.image).width(720).height(900).url()}
+                    alt={member.imageAlt || `Foto de ${member.name}`}
+                    fill
+                    sizes="(max-width: 640px) 78vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover object-top transition-[filter,transform] duration-700 ease-(--ease-out-expo) group-hover:scale-[1.04] group-hover:grayscale-0 [@media(hover:hover)]:grayscale-[0.85]"
+                  />
+                )}
+                <div
+                  aria-hidden="true"
+                  className="from-ink-950 via-ink-950/30 absolute inset-0 bg-linear-to-t via-40% to-transparent"
+                />
+                <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+                  <p className="text-brass font-mono text-[10px] tracking-[0.25em] uppercase sm:text-[11px]">
+                    {member.role}
+                  </p>
+                  <h3 className="font-display text-bone mt-1 text-3xl leading-[0.95] font-extrabold tracking-tight uppercase sm:text-4xl">
+                    {member.name}
+                  </h3>
                 </div>
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-linear-to-t from-zinc-950/90 to-transparent opacity-80 transition-opacity duration-700 group-hover:opacity-60" />
+                <span
+                  aria-hidden="true"
+                  className="border-bone/10 group-hover:border-brass/50 pointer-events-none absolute inset-0 rounded-sm border transition-colors duration-500"
+                />
               </div>
 
-              <div className="mt-8 flex flex-col items-center text-center transition-all duration-500">
-                <h3 className="font-cinzel text-2xl font-bold tracking-wider text-zinc-100 transition-colors duration-300 group-hover:text-white">
-                  {member.name}
-                </h3>
-
-                <p className="font-teko mt-1.5 text-xl tracking-[0.2em] text-(--gold) uppercase">
-                  {member.role}
+              {member.description && (
+                <p className="text-bone-muted mt-4 text-sm leading-relaxed text-pretty">
+                  <ExpandableText text={member.description} maxLength={120} />
                 </p>
-
-                <div className="mt-3 mb-4 h-0.5 w-6 bg-(--gold)/20 transition-all duration-500 group-hover:w-16 group-hover:bg-(--gold)/60" />
-
-                <p className="mx-auto max-w-70 font-sans text-sm leading-relaxed font-light text-zinc-500 transition-colors duration-500 group-hover:text-zinc-300">
-                  <ExpandableText text={member.description} maxLength={110} />
-                </p>
-              </div>
-            </div>
+              )}
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );

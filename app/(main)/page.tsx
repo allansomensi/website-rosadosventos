@@ -4,18 +4,20 @@ import BandMembers from "@/components/sections/BandMembers";
 import Contact from "@/components/sections/Contact";
 import Highlight from "@/components/sections/Highlight";
 import LojaPromo from "@/components/sections/LojaPromo";
+import Marquee from "@/components/sections/Marquee";
 import TheHero from "@/components/sections/TheHero";
 
 export default function Home() {
   return (
-    <div>
+    <>
       <TheHero />
+      <Marquee />
       <Highlight />
       <Agenda />
       <About />
       <BandMembers />
       <LojaPromo />
       <Contact />
-    </div>
+    </>
   );
 }

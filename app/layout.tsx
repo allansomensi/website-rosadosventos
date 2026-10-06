@@ -1,30 +1,31 @@
 import type { Metadata, Viewport } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Cinzel, Roboto, Teko } from "next/font/google";
+import { Archivo, Big_Shoulders, Space_Mono } from "next/font/google";
 import "./globals.css";
 import { SanityLive } from "@/sanity/lib/live";
 
-const cinzel = Cinzel({
-  variable: "--font-cinzel",
-  weight: ["700"],
+const bigShoulders = Big_Shoulders({
+  variable: "--font-big-shoulders",
   subsets: ["latin"],
   display: "swap",
 });
 
-const teko = Teko({
-  variable: "--font-teko",
+const archivo = Archivo({
+  variable: "--font-archivo",
   subsets: ["latin"],
+  axes: ["wdth"],
   display: "swap",
 });
 
-const roboto = Roboto({
-  variable: "--font-roboto",
+const spaceMono = Space_Mono({
+  variable: "--font-space-mono",
   subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#070808",
   width: "device-width",
   initialScale: 1,
 };
@@ -97,7 +98,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-br" className="scroll-smooth">
+    <html lang="pt-BR">
       <head>
         <link rel="preconnect" href="https://cdn.sanity.io" />
         <script
@@ -106,7 +107,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${cinzel.variable} ${teko.variable} ${roboto.variable} antialiased`}
+        className={`${bigShoulders.variable} ${archivo.variable} ${spaceMono.variable}`}
       >
         {children}
         <SanityLive />

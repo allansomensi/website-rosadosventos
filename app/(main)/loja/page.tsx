@@ -1,15 +1,26 @@
-import { IconBrandWhatsapp, IconShoppingBag } from "@tabler/icons-react";
-import { sanityFetch } from "@/sanity/lib/live";
-import { LOJA_QUERY, CONTACT_QUERY } from "@/sanity/lib/queries";
+import {
+  IconBrandWhatsapp,
+  IconMessageCircle,
+  IconPackage,
+  IconShirt,
+  IconShoppingBag,
+} from "@tabler/icons-react";
+import type { Metadata } from "next";
+import type { SanityImageSource } from "@sanity/image-url";
+import ProductGrid from "@/components/common/ProductGrid";
+import { buttonStyles } from "@/components/ui/button";
+import PageHero from "@/components/ui/PageHero";
+import { whatsappLink } from "@/lib/loja";
+import type { ContactData } from "@/lib/site";
 import { urlFor } from "@/sanity/lib/image";
-import { SanityImageSource } from "@sanity/image-url";
-import ProductCard from "@/components/common/ProductCard";
-import { Metadata } from "next";
+import { sanityFetch } from "@/sanity/lib/live";
+import { CONTACT_QUERY, LOJA_QUERY } from "@/sanity/lib/queries";
 
 export const metadata: Metadata = {
   title: "Loja",
   description:
     "Produtos oficiais da banda Rosa dos Ventos. Camisetas, bonés, canecas e muito mais. Compre via WhatsApp.",
+  alternates: { canonical: "/loja" },
   openGraph: {
     title: "Loja | Rosa dos Ventos",
     description:
@@ -33,12 +44,23 @@ interface ProdutoSanity {
   }[];
 }
 
-interface ContatoData {
-  whatsappContacts?: {
-    text: string;
-    url: string;
-  }[];
-}
+const STEPS = [
+  {
+    Icon: IconShirt,
+    title: "Escolha",
+    text: "Navegue pelos produtos e selecione o tamanho, se houver.",
+  },
+  {
+    Icon: IconMessageCircle,
+    title: "Chame no WhatsApp",
+    text: "Toque em “Quero este” — a mensagem já vai pronta.",
+  },
+  {
+    Icon: IconPackage,
+    title: "Combine e receba",
+    text: "Acertamos pagamento e entrega direto com você.",
+  },
+];
 
 export default async function Loja() {
   const [{ data: produtosData }, { data: contatoData }] = await Promise.all([
@@ -46,102 +68,107 @@ export default async function Loja() {
     sanityFetch({ query: CONTACT_QUERY }),
   ]);
 
-  const produtos = (produtosData as ProdutoSanity[]) || [];
-  const contato = contatoData as ContatoData | null;
+  const produtos = (produtosData as ProdutoSanity[] | null) ?? [];
+  const contato = contatoData as ContactData | null;
   const whatsappUrl = contato?.whatsappContacts?.[0]?.url ?? "";
-
-  const whatsappBase = whatsappUrl.split("?")[0];
 
   const produtosFormatados = produtos.map((p) => ({
     ...p,
-    imagens: (p.imagens ?? []).map((img) => ({
-      url: urlFor(img.asset).width(800).height(800).url(),
-      alt: img.alt ?? p.nome,
-    })),
+    imagens: (p.imagens ?? [])
+      .filter((img) => img.asset)
+      .map((img) => ({
+        url: urlFor(img.asset).width(800).height(800).url(),
+        alt: img.alt ?? p.nome,
+      })),
   }));
 
-  const totalDisponiveis = produtosFormatados.filter(
-    (p) => p.disponivel !== false,
-  ).length;
-
   return (
-    <main className="min-h-screen bg-zinc-950 pt-32 pb-24">
-      <div className="mx-auto max-w-7xl px-6">
-        {/* Header */}
-        <div className="relative z-10 mb-16 text-center sm:text-left">
-          <p className="font-teko mb-3 text-xl tracking-[0.3em] text-(--gold) uppercase">
-            Produtos Oficiais
-          </p>
-          <h1 className="font-cinzel text-5xl font-bold text-white drop-shadow-lg sm:text-6xl md:text-7xl">
-            Loja
-          </h1>
-          <div className="mx-auto mt-8 h-px w-24 bg-linear-to-r from-(--gold) to-transparent sm:mx-0" />
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-(--text-muted)">
-            Leve um pedaço da Rosa dos Ventos com você. Clique em{" "}
-            <span className="text-white/90">&quot;Tenho Interesse&quot;</span> e
-            finalize sua compra diretamente pelo WhatsApp.
-          </p>
+    <>
+      <PageHero
+        breadcrumb="Loja"
+        eyebrow="Produtos oficiais"
+        title={
+          <>
+            Loja <span className="text-brass-gradient">oficial</span>
+          </>
+        }
+        description="Leve um pedaço da Rosa dos Ventos com você. Escolha o produto, toque em “Quero este” e finalize a compra direto com a banda pelo WhatsApp."
+      >
+        <ol className="grid grid-cols-1 gap-px overflow-hidden rounded-sm sm:grid-cols-3">
+          {STEPS.map(({ Icon, title, text }, i) => (
+            <li
+              key={title}
+              className="bg-ink-900/80 border-bone/8 flex items-center gap-4 border px-4 py-3 backdrop-blur-sm sm:items-start sm:p-5"
+            >
+              <span className="bg-brass/10 text-brass flex h-10 w-10 shrink-0 items-center justify-center rounded-full sm:h-11 sm:w-11">
+                <Icon size={22} stroke={1.75} aria-hidden="true" />
+              </span>
+              <span>
+                <span className="text-bone-dim font-mono text-[10px] tracking-[0.25em] uppercase">
+                  Passo {i + 1}
+                </span>
+                <span className="font-display text-bone block text-xl font-bold uppercase">
+                  {title}
+                </span>
+                <span className="text-bone-muted mt-1 hidden text-sm leading-relaxed sm:block">
+                  {text}
+                </span>
+              </span>
+            </li>
+          ))}
+        </ol>
+      </PageHero>
 
-          {totalDisponiveis > 0 && (
-            <p className="font-teko mt-3 text-lg tracking-wider text-zinc-500 uppercase">
-              {totalDisponiveis}{" "}
-              {totalDisponiveis === 1
-                ? "produto disponível"
-                : "produtos disponíveis"}
-            </p>
-          )}
-        </div>
-
-        {/* Grid de produtos */}
+      <section aria-label="Produtos" className="container-site py-14 sm:py-20">
         {produtosFormatados.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {produtosFormatados.map((produto) => (
-              <ProductCard
-                key={produto._id}
-                produto={produto}
-                whatsappUrl={whatsappBase}
-              />
-            ))}
-          </div>
+          <ProductGrid
+            produtos={produtosFormatados}
+            whatsappUrl={whatsappUrl}
+          />
         ) : (
-          /* Estado vazio */
-          <div className="py-24 text-center">
-            <div className="mb-6 flex justify-center">
-              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-zinc-900">
-                <IconShoppingBag size={36} className="text-(--gold)" />
-              </div>
-            </div>
-            <p className="font-cinzel mb-2 text-2xl text-zinc-400">
-              Em breve, novidades!
+          <div className="border-bone/12 flex flex-col items-center rounded-sm border border-dashed px-6 py-20 text-center">
+            <span className="bg-brass/10 text-brass flex h-16 w-16 items-center justify-center rounded-full">
+              <IconShoppingBag size={30} stroke={1.5} aria-hidden="true" />
+            </span>
+            <p className="font-display text-bone mt-6 text-3xl font-extrabold uppercase sm:text-4xl">
+              Novidades a caminho
             </p>
-            <p className="font-teko text-xl tracking-wide text-zinc-600">
-              Nossos produtos estarão disponíveis aqui em breve.
+            <p className="text-bone-muted mt-3 max-w-md">
+              Nossos produtos estarão disponíveis aqui em breve. Volte logo!
             </p>
           </div>
         )}
 
-        {/* Banner CTA WhatsApp */}
-        {whatsappBase && produtosFormatados.length > 0 && (
-          <section className="mt-20 rounded-2xl border border-zinc-800 bg-zinc-900/50 p-8 text-center backdrop-blur-sm sm:p-12">
-            <h2 className="font-cinzel mb-3 text-2xl font-bold text-white sm:text-3xl">
-              Não encontrou o que procura?
-            </h2>
-            <p className="mx-auto mb-8 max-w-md text-(--text-muted)">
-              Fale direto com a gente pelo WhatsApp. Podemos tirar todas as suas
-              dúvidas sobre produtos, tamanhos e formas de pagamento.
-            </p>
+        {whatsappUrl && produtosFormatados.length > 0 && (
+          <div className="border-bone/10 bg-ink-900 mt-16 flex flex-col items-start gap-6 rounded-sm border p-6 sm:mt-24 sm:flex-row sm:items-center sm:justify-between sm:p-10">
+            <div>
+              <h2 className="font-display text-bone text-3xl leading-none font-extrabold uppercase sm:text-4xl">
+                Não achou o que queria?
+              </h2>
+              <p className="text-bone-muted mt-3 max-w-lg">
+                Tire dúvidas sobre produtos, tamanhos e formas de pagamento
+                direto com a gente.
+              </p>
+            </div>
             <a
-              href={`${whatsappBase}?text=${encodeURIComponent("Olá! Gostaria de saber mais sobre os produtos da loja.")}`}
+              href={whatsappLink(
+                whatsappUrl,
+                "Olá! Gostaria de saber mais sobre os produtos da loja.",
+              )}
               target="_blank"
               rel="noopener noreferrer"
-              className="font-teko inline-flex items-center gap-3 border border-(--gold) bg-(--gold) px-10 py-4 text-2xl tracking-wider text-black uppercase transition-all duration-300 hover:bg-transparent hover:text-(--gold)"
+              className={buttonStyles({
+                variant: "whatsapp",
+                size: "lg",
+                className: "w-full sm:w-auto",
+              })}
             >
-              <IconBrandWhatsapp size={24} aria-hidden="true" />
-              Falar pelo WhatsApp
+              <IconBrandWhatsapp size={22} aria-hidden="true" />
+              Falar no WhatsApp
             </a>
-          </section>
+          </div>
         )}
-      </div>
-    </main>
+      </section>
+    </>
   );
 }

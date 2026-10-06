@@ -1,114 +1,69 @@
+import ShowList from "@/components/common/ShowList";
+import CompassRose from "@/components/ui/CompassRose";
+import SectionHeading from "@/components/ui/SectionHeading";
+import SocialLinks from "@/components/ui/SocialLinks";
+import { getUpcomingShows, type SanityShow } from "@/lib/shows";
+import type { ContactData } from "@/lib/site";
 import { sanityFetch } from "@/sanity/lib/live";
-import { SHOWS_QUERY } from "@/sanity/lib/queries";
-import ShowCard from "../common/ShowCard";
-
-interface SanityShow {
-  _id: string;
-  data: string;
-  local: string;
-  cidade: string;
-  link?: string;
-  linkLocalizacao?: string;
-}
-
-interface FormattedShow extends SanityShow {
-  dia: string;
-  mes: string;
-  ano: string;
-  horario: string;
-  diaSemana: string;
-}
-
-function formatShow(show: SanityShow): FormattedShow {
-  const date = new Date(show.data);
-  const hasTime =
-    show.data.includes("T") &&
-    !show.data.endsWith("T00:00:00Z") &&
-    !show.data.endsWith("T00:00:00.000Z");
-
-  const timeZone = "America/Sao_Paulo";
-
-  const formatter = (options: Intl.DateTimeFormatOptions) =>
-    new Intl.DateTimeFormat("pt-BR", { timeZone, ...options }).format(date);
-
-  const rawMonth = formatter({ month: "short" }).replace(".", "");
-  const rawWeekday = formatter({ weekday: "long" }).replace("-feira", "");
-
-  return {
-    ...show,
-    dia: formatter({ day: "2-digit" }),
-    mes: rawMonth.charAt(0).toUpperCase() + rawMonth.slice(1),
-    ano: formatter({ year: "numeric" }),
-    horario: hasTime
-      ? formatter({ hour: "2-digit", minute: "2-digit" })
-      : "A confirmar",
-    diaSemana: rawWeekday.charAt(0).toUpperCase() + rawWeekday.slice(1),
-  };
-}
+import { CONTACT_QUERY, SHOWS_QUERY } from "@/sanity/lib/queries";
 
 export default async function Agenda() {
-  const { data } = await sanityFetch({ query: SHOWS_QUERY });
-  const shows = (data as SanityShow[]) || [];
+  const [{ data: showsData }, { data: contactData }] = await Promise.all([
+    sanityFetch({ query: SHOWS_QUERY }),
+    sanityFetch({ query: CONTACT_QUERY }),
+  ]);
 
-  const timeZone = "America/Sao_Paulo";
-
-  const getZonedDateString = (d: Date) =>
-    new Intl.DateTimeFormat("sv-SE", { timeZone }).format(d);
-
-  const todayZoned = getZonedDateString(new Date());
-
-  const upcomingShows: FormattedShow[] = shows
-    .filter((show) => {
-      const showZoned = getZonedDateString(new Date(show.data));
-      return showZoned >= todayZoned;
-    })
-    .map(formatShow)
-    .sort((a, b) => new Date(a.data).getTime() - new Date(b.data).getTime());
-
-  const currentYear = new Date().getFullYear();
+  const upcomingShows = getUpcomingShows(showsData as SanityShow[]);
+  const contact = contactData as ContactData | null;
+  const total = upcomingShows.length;
 
   return (
     <section
       id="agenda"
-      className="bg-background py-20 sm:py-28"
-      aria-label="Próximos shows"
+      aria-labelledby="agenda-title"
+      className="bg-ink-900 relative overflow-hidden py-20 sm:py-28"
     >
-      <div className="mx-auto max-w-4xl px-4 sm:px-6">
-        <div className="mb-14 text-center">
-          <p className="font-teko mb-2 text-xl tracking-[0.25em] text-(--gold) uppercase sm:text-2xl">
-            Temporada {currentYear}
-          </p>
-          <h2 className="font-cinzel text-4xl font-bold tracking-wide text-white sm:text-5xl md:text-6xl">
-            Próximos Shows
-          </h2>
-          <div
-            className="mx-auto mt-5 h-px w-20 bg-linear-to-r from-transparent via-(--gold) to-transparent"
-            aria-hidden="true"
-          />
-        </div>
+      <CompassRose className="text-bone/3 pointer-events-none absolute -top-40 -left-40 w-[640px]" />
 
-        {upcomingShows.length > 0 ? (
-          <>
-            <div className="flex flex-col border-t border-(--border)">
-              {upcomingShows.map((show) => (
-                <ShowCard key={show._id} show={show} />
-              ))}
-            </div>
-            <p className="mt-8 text-center text-sm text-(--text-muted) italic sm:text-base">
-              Toque em um show para ver detalhes e horários.
+      <div className="container-site relative">
+        <SectionHeading
+          id="agenda-title"
+          eyebrow={`Temporada ${new Date().getFullYear()}`}
+          title="Próximos shows"
+          className="reveal mb-10 sm:mb-14"
+          action={
+            total > 0 && (
+              <p className="text-bone-muted font-mono text-xs tracking-[0.2em] uppercase">
+                <span className="text-bone font-display mr-2 text-4xl font-black tracking-normal">
+                  {String(total).padStart(2, "0")}
+                </span>
+                {total === 1 ? "data confirmada" : "datas confirmadas"}
+              </p>
+            )
+          }
+        />
+
+        {total > 0 ? (
+          <div className="reveal">
+            <ShowList shows={upcomingShows} />
+            <p className="text-bone-dim mt-6 text-center font-mono text-[11px] tracking-[0.2em] uppercase">
+              Toque em um show para ver detalhes
             </p>
-          </>
+          </div>
         ) : (
-          <div className="py-16 text-center sm:py-20">
-            <div className="mb-6 text-5xl sm:text-6xl" aria-hidden="true">
-              🎸
-            </div>
-            <p className="font-cinzel mb-3 text-xl text-(--text-secondary) sm:text-2xl">
-              Nenhum show agendado no momento
+          <div className="reveal border-bone/12 flex flex-col items-center rounded-sm border border-dashed px-6 py-16 text-center sm:py-20">
+            <CompassRose className="text-brass/70 animate-spin-slow h-16 w-16" />
+            <p className="font-display text-bone mt-6 text-3xl font-extrabold uppercase sm:text-4xl">
+              Novas datas em breve
             </p>
-            <p className="font-teko text-lg tracking-wide text-(--text-muted) sm:text-xl">
-              Fique de olho nas nossas redes sociais para novidades em breve!
+            <p className="text-bone-muted mt-3 max-w-md">
+              Estamos acertando os próximos rolês. Siga a banda nas redes e seja
+              o primeiro a saber quando a agenda abrir.
             </p>
+            <SocialLinks
+              links={contact?.socialLinks}
+              className="mt-8 justify-center"
+            />
           </div>
         )}
       </div>
