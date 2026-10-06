@@ -49,7 +49,7 @@ export default function TheFooter({
                 />
               )}
               <span className="font-display text-bone text-3xl leading-[0.9] font-extrabold tracking-wide uppercase">
-                Rosa <span className="text-brass">dos</span>
+                Rosa dos
                 <br />
                 Ventos
               </span>

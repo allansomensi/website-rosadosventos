@@ -185,7 +185,7 @@ export default function TheHeader({
                 />
               )}
               <span className="font-display text-bone text-xl leading-none font-extrabold tracking-[0.06em] uppercase lg:text-2xl">
-                Rosa <span className="text-brass">dos</span> Ventos
+                Rosa dos Ventos
               </span>
             </Link>
 
